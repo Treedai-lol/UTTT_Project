@@ -27,9 +27,9 @@ def GetOwnerShip(board:Board,index:int,o:bool) ->list: #returns the indices of p
 def BoardFinished(board:Board,index:int,o:bool) ->bool: #returns whether the board has been finished
     output = False
     piecelist = GetOwnerShip(board,index,o)
-    a = b = c = False
     winning = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
     for i in winning:
+        a = b = c = False
         for j in piecelist:
             if j == i[0]:
                 a = True
@@ -70,28 +70,33 @@ def GameFinished(board:Board,o:bool) ->bool: #returns whether the game has been 
             output = True
     board.gg = output
     return output
-
-def GameStart(board:Board,o:bool):
+def MakeMove(board:Board,o:bool,a:int,b:int) ->None: #The target square MUST be empty
+    if o:
+        board.bs[a][b] = 1
+    else:
+        board.bs[a][b] = 2
+def StartRound(board:Board,o:bool):
     a = b = 99
     PrintBoard(board)
     if o:
         player = "O"
     else:
         player = "X"
+    print("debug: enter p to skip your turn")
     inpt = input(f"{player}'s turn, please make a move") #takes "ab" as input, puts piece on board a, position b
+    if inpt == "p":
+        board.o = not o
+        return
     a = int(inpt[0])
     b = int(inpt[1])
-    if o:
-        board.bs[a][b] = 1
+    if board.bs[a][b] == 0:
+        MakeMove(board,o,a,b)
     else:
-        board.bs[a][b] = 2
-    board.o = not o
+        board.o = not o
+        return
     BoardFinished(board,a,o)
     GameFinished(board,o)
-    PrintBoard(board)
-    print(board.gg)
-    if not board.gg:
-        GameStart(board,not o)
+    board.o = not o
 
 
 def BoardInit() ->Board:
@@ -100,22 +105,24 @@ def BoardInit() ->Board:
         list.append([])
         for j in range(0,9):
             list[i].append(0)
-    """list[0][0] = 0
-    list[0][1] = 0
-    list[0][2] = 0
-    list[0][3] = 0
-    list[0][4] = 0
-    list[0][5] = 0
-    list[0][6] = 2
-    list[0][7] = 2
-    list[0][8] = 2"""
-    wb = [1,1,1,0,0,0,0,0,0]
+    list[0][0] = 1
+    list[0][1] = 1
+    list[0][2] = 1
+    list[1][0] = 1
+    list[1][1] = 1
+    list[1][2] = 1
+    list[2][0] = 1
+    list[2][1] = 1
+    list[2][2] = 0
+    wb = [1,1,0,0,0,0,0,0,0]
     """for i in range(0,9):
         wb.append(1)"""
     board = Board(list,wb,True,False)
     return board
 def main():
     board = BoardInit()
-    GameStart(board,True)
+    while not board.gg:
+        StartRound(board,board.o)
+    print("GAME OVER")
 if __name__ == '__main__':
     main()
