@@ -86,7 +86,7 @@ def VerifyMove(board:Board,a:int,b:int) ->int:
         return 3
     else: #all good
         return 0
-def StartRound(board:Board,o:bool):
+def StartRound(board:Board,o:bool) ->None:
     a = b = 99
     PrintBoard(board)
     if o:
@@ -95,7 +95,7 @@ def StartRound(board:Board,o:bool):
         player = "X"
     print("debug: enter p to skip your turn")
     inpt = list(input(f"{player}'s turn, please make a move")) #takes "ab" as input, puts piece on board a, position b
-    if inpt == "p":
+    if inpt == ["p"]:
         board.o = not o
         return
     a = int(inpt[0])
