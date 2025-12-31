@@ -71,12 +71,12 @@ def GameFinished(board:Board,o:bool) ->bool: #returns whether the game has been 
             output = True
     board.gg = output
     return output
-def MakeMove(board:Board,o:bool,a:int,b:int) ->None: #The target square MUST be empty
-    board.sb = b
-    if o:
-        board.bs[a][b] = 1
-    else:
-        board.bs[a][b] = 2
+def InputMove(player) ->list: #takes "ab" as input, puts piece on board a, position b
+    temp =  list(input(f"{player}'s turn, please make a move")) 
+    temp[0] = int(temp[0])
+    temp[1] = int(temp[1])
+    return temp
+
 def VerifyMove(board:Board,a:int,b:int) ->int:
     if a>8 or b>8: #check if index is in range
         return 1 
@@ -86,6 +86,12 @@ def VerifyMove(board:Board,a:int,b:int) ->int:
         return 3
     else: #all good
         return 0
+def MakeMove(board:Board,o:bool,a:int,b:int) ->None: #The target square MUST be empty
+    board.sb = b
+    if o:
+        board.bs[a][b] = 1
+    else:
+        board.bs[a][b] = 2
 def StartRound(board:Board,o:bool) ->None:
     a = b = 99
     PrintBoard(board)
@@ -93,13 +99,9 @@ def StartRound(board:Board,o:bool) ->None:
         player = "O"
     else:
         player = "X"
-    print("debug: enter p to skip your turn")
-    inpt = list(input(f"{player}'s turn, please make a move")) #takes "ab" as input, puts piece on board a, position b
-    if inpt == ["p"]:
-        board.o = not o
-        return
-    a = int(inpt[0])
-    b = int(inpt[1])
+    temp = InputMove(player)
+    a = temp[0]
+    b = temp[1]
     if VerifyMove(board,a,b) == 0:
         MakeMove(board,o,a,b)
     else:
@@ -128,7 +130,7 @@ def BoardInit() ->Board:
     wb = [0,0,0,0,0,0,0,0,0]
     """for i in range(0,9):
         wb.append(1)"""
-    board = Board(list,wb,True,False,9)
+    board = Board(list,wb,True,False,0)
     return board
 def main():
     board = BoardInit()
