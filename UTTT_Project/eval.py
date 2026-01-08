@@ -31,13 +31,27 @@ def NaiveEval(board:lib.Board,o:bool) ->int:
             if i == 2:
                 temp = temp+1
     return temp
-def Search(board:lib.Board,o:bool,depth:int):
-    while depth>0:
-        wl = GetMoves(board)
-        for i in wl:
-            print(i)
-            #lib.MakeMove(board,o,i[0],i[1])
+"""int maxi( int depth ) {
+    if ( depth == 0 ) return evaluate();
+    int max = -oo;
+    for ( all moves) {
+        score = mini( depth - 1 );
+        if( score > max )
+            max = score;
+    }
+    return max;
+}
 
+int mini( int depth ) {
+    if ( depth == 0 ) return -evaluate();
+    int min = +oo;
+    for ( all moves) {
+        score = maxi( depth - 1 );
+        if( score < min )
+            min = score;
+    }
+    return min;
+}"""
 def main():
     board = lib.BoardInit()
     o = True

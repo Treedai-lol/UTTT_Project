@@ -71,11 +71,13 @@ def GameFinished(board:Board,o:bool) ->bool: #returns whether the game has been 
             output = True
     board.gg = output
     return output
-def InputMove(player) ->list: #takes "ab" as input, puts piece on board a, position b
-    temp =  list(input(f"{player}'s turn, please make a move")) 
-    temp[0] = int(temp[0])
-    temp[1] = int(temp[1])
-    return temp
+def InputMove(player:str) ->list: #takes "ab" as input, puts piece on board a, position b
+    ret = []
+    temp =  input(player+"'s turn, please make a move")
+    temp = int(temp)
+    ret.append(int((temp-temp%10)/10))
+    ret.append(temp%10)
+    return ret
 
 def VerifyMove(board:Board,a:int,b:int) ->int:
     if a>8 or b>8: #check if index is in range
@@ -84,6 +86,8 @@ def VerifyMove(board:Board,a:int,b:int) ->int:
         return 2 
     elif a != board.sb and board.sb!=9: #check if the UTTT rule applies 
         return 3
+    elif board.wonboards[a] != 0: #check if the board is won
+        return 4
     else: #all good
         return 0
 def MakeMove(board:Board,o:bool,a:int,b:int) ->None: #The target square MUST be empty
@@ -108,10 +112,12 @@ def StartRound(board:Board,o:bool) ->None:
         print("error "+str(VerifyMove(board,a,b)))
         return
     BoardFinished(board,a,o)
+    if board.wonboards[b] != 0:
+        board.sb = 9
+    else:
+        board.sb = b
     GameFinished(board,o)
     board.o = not o
-
-
 def BoardInit() ->Board:
     list = []
     for i in range(0,9):
@@ -130,12 +136,13 @@ def BoardInit() ->Board:
     wb = [0,0,0,0,0,0,0,0,0]
     """for i in range(0,9):
         wb.append(1)"""
-    board = Board(list,wb,True,False,0)
+    board = Board(list,wb,True,False,9)
     return board
 def main():
     board = BoardInit()
     while not board.gg:
         StartRound(board,board.o)
+        print(board.wonboards)
     print("GAME OVER")
 if __name__ == '__main__':
     main()
