@@ -1,2 +1,4 @@
 2025/12/18:
     wonboards attribute in Board object will only update every time BoardFinished is called
+2026/01/22:
+    be cautious when dealing with the o attribute, the sequence might get messy
