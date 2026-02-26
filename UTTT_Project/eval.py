@@ -13,7 +13,8 @@ class MCTSNode():
         self.visits = 0
         self.wins = 0.0
         self.untried_moves = GetMoves(board)
-
+    def data(self):
+        return self.move, self.player, self.visits, self.wins, self.untried_moves
     def is_fully_expanded(self):
         return len(self.untried_moves) == 0
     
@@ -73,19 +74,22 @@ def mcts_search(root_state, iterations=5000):
     for _ in range(iterations):
         node = root
 
-        while not node.board.gg and node.is_fully_expanded():
+        while not node.board.GameFinished(node.board.o) and node.is_fully_expanded():
             node = node.best_child()
 
-        if not node.board.gg and not node.is_fully_expanded():
+        if not node.board.GameFinished(node.board.o) and not node.is_fully_expanded():
             node = node.expand()
 
         winner = node.rollout()
         node.backpropagate(winner)
 
     best = max(root.children, key=lambda c: c.visits)
-    while root.children:
+    """while root.children:
         print(root.children[-1].visits)
-        root.children.pop()
+        root.children.pop()"""
+    for i in root.children:
+        print(i.data())
+    print(root.data())
     return best.move
 def play_game():
     board = lib.BoardInit()
@@ -121,16 +125,50 @@ def GetMoves(board: lib.Board) ->list:
                if board.bs[i][j] == 0:
                     movelist.append([i,j])
     return movelist
-def Compare(func1,func2,games):
-    for i in range(games):
+def Compare(func1,func2,games)->list:
+    a = True
+    result = [0,0,0]#func1 win, func2 win, draw
+    for _ in range(games):
         board = lib.BoardInit()
-        if board.o:
-            move = func1(board)
-        if not board.o:
-            move = func2(board)
-        board.MakeMove(board.o,move[0],move[1])
-        board.BoardFinished(move[0],o)
-        board.o = not board.o
+        while True:
+            o = board.o
+            if not GetMoves(board):
+                result[2]+=1
+                break
+            if  o:
+                move = func1(board)
+            if not o:
+                move = func2(board)
+            board.MakeMove(o,move[0],move[1])
+            board.BoardFinished(move[0],o)
+            if o & board.GameFinshed(o):
+                result[0]+=1
+                break
+            elif board.GameFinished(o):
+                result[1]+=1
+                break
+            board.o = not board.o
+    for _ in range(games):
+        board = lib.BoardInit()
+        while True:
+            o = board.o
+            if not GetMoves(board):
+                result[2]+=1
+                break
+            if  not o:
+                move = func1(board)
+            if o:
+                move = func2(board)
+            board.MakeMove(o,move[0],move[1])
+            board.BoardFinished(move[0],o)
+            if o & board.GameFinshed(o):
+                result[1]+=1
+                break
+            elif board.GameFinished(o):
+                result[0]+=1
+                break
+            board.o = not board.o
+    return result
 
 def main():
     play_game()
