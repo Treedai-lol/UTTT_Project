@@ -1,2 +1,2 @@
 UTTT stands for Ultimate Tic-Tac-Toe.
-nothing else here for now...
+Absolutely NONE of my code is AI-generated

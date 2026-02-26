@@ -1,9 +1,8 @@
 class Board():
-    def __init__(self, bs:list, wonboards:list, o:bool, gg:bool, sb:int) -> None:
+    def __init__(self, bs:list, wonboards:list, o:bool, sb:int) -> None:
         self.bs = bs
         self.o = o
         self.wonboards = wonboards
-        self.gg = gg
         self.sb = sb
     def PrintBoard(self) ->None: #print board function
         for i in range(0,3):
@@ -57,9 +56,9 @@ class Board():
             for i in range(0,9):
                 if  tmp[i] == 2:
                     piecelist.append(i)
-        a = b = c = False
         winning = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
         for i in winning:
+            a = b = c = False
             for j in piecelist:
                 if j == i[0]:
                     a = True
@@ -69,7 +68,6 @@ class Board():
                     c = True
             if a & b & c:
                 output = True
-        self.gg = output
         return output
     def InputMove(self,player:str) ->list: #takes "ab" as input, puts piece on board a, position b
         ret = []
@@ -90,11 +88,14 @@ class Board():
         else: #all good
             return 0
     def MakeMove(self,o:bool,a:int,b:int) ->None: #The target square MUST be empty
-        self.sb = b
         if o:
             self.bs[a][b] = 1
         else:
             self.bs[a][b] = 2
+        if self.wonboards[b] != 0:
+            self.sb = 9
+        else:
+            self.sb = b
     def StartRound(self,o:bool) ->None: #some jumbled up shit
         a = b = 99
         self.PrintBoard()
@@ -133,13 +134,11 @@ def BoardInit() ->Board:
             [0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0]]
     wb = [0,0,0,0,0,0,0,0,0]
-    board = Board(list,wb,True,False,9)
+    board = Board(list,wb,True,9)
     return board
 def main():
     board = BoardInit()
-    while not board.gg:
-        board.StartRound(board.o)
-        print(board.wonboards)
-    print("GAME OVER")
+    board.GameFinished(True)
+    print(board.gg)
 if __name__ == '__main__':
     main()
