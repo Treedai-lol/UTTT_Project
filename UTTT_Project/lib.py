@@ -57,10 +57,9 @@ class Board():
             for i in range(0,9):
                 if  tmp[i] == 2:
                     piecelist.append(i)
-        
+        a = b = c = False
         winning = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
         for i in winning:
-            a = b = c = False
             for j in piecelist:
                 if j == i[0]:
                     a = True
@@ -138,6 +137,9 @@ def BoardInit() ->Board:
     return board
 def main():
     board = BoardInit()
-    print(board.GameFinished(board.o))
+    while not board.gg:
+        board.StartRound(board.o)
+        print(board.wonboards)
+    print("GAME OVER")
 if __name__ == '__main__':
     main()
