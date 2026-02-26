@@ -1,9 +1,8 @@
 class Board():
-    def __init__(self, bs:list, wonboards:list, o:bool, gg:bool, sb:int) -> None:
+    def __init__(self, bs:list, wonboards:list, o:bool, sb:int) -> None:
         self.bs = bs
         self.o = o
         self.wonboards = wonboards
-        self.gg = gg
         self.sb = sb
     def PrintBoard(self) ->None: #print board function
         for i in range(0,3):
@@ -69,7 +68,6 @@ class Board():
                     c = True
             if a & b & c:
                 output = True
-        self.gg = output
         return output
     def InputMove(self,player:str) ->list: #takes "ab" as input, puts piece on board a, position b
         ret = []
@@ -136,7 +134,7 @@ def BoardInit() ->Board:
             [0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0]]
     wb = [0,0,0,0,0,0,0,0,0]
-    board = Board(list,wb,True,False,9)
+    board = Board(list,wb,True,9)
     return board
 def main():
     board = BoardInit()
