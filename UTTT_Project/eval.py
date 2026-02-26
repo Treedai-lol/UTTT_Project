@@ -21,6 +21,7 @@ class MCTSNode():
         move = self.untried_moves.pop()
         new_board = deepcopy(self.board)
         new_board.MakeMove(new_board.o,move[0],move[1])
+        new_board.o = not new_board.o
 
         child = MCTSNode(new_board, parent=self, move=move, player=self.board.o)
         self.children.append(child)
@@ -40,18 +41,23 @@ class MCTSNode():
     
     def rollout(self): #uses random moves to finish the game, True or False for a win, None for a draw
         board = deepcopy(self.board)
-        o = board.o
-
         while True:
-            winner = board.GameFinished(o)
-            if winner is True:
-                return o
+            o = board.o
             moves = GetMoves(board)
             if not moves:
                 return None
+            #print(moves)
             move = random.choice(moves)
             board.MakeMove(board.o,move[0],move[1])
-            o = not o
+            board.BoardFinished(move[0],o)
+            winner = board.GameFinished(o)
+            if winner is True:
+                #print(o)
+                return o
+            #board.PrintBoard()
+            #print(board.wonboards)
+            #print("")
+            board.o = not board.o
     def backpropagate(self, winner):
         self.visits += 1
 
@@ -62,7 +68,7 @@ class MCTSNode():
                 self.wins += 1.0
         if self.parent:
             self.parent.backpropagate(winner)
-def mcts_search(root_state, iterations:int):
+def mcts_search(root_state, iterations=5000):
     root = MCTSNode(root_state, player=None)
     for _ in range(iterations):
         node = root
@@ -77,14 +83,14 @@ def mcts_search(root_state, iterations:int):
         node.backpropagate(winner)
 
     best = max(root.children, key=lambda c: c.visits)
+    while root.children:
+        print(root.children[-1].visits)
+        root.children.pop()
     return best.move
 def play_game():
     board = lib.BoardInit()
-    board.PrintBoard()
-    move = mcts_search(board,iterations=500)
-    print("debug")
-    board.MakeMove(board.o,move[0],move[1])
-    board.PrintBoard()
+    move = mcts_search(board)
+    print(move)
 def DumbEval(board:lib.Board,o:bool) ->int:
     return 0
 def NaiveEval(board:lib.Board,o:bool) ->int:
@@ -115,6 +121,17 @@ def GetMoves(board: lib.Board) ->list:
                if board.bs[i][j] == 0:
                     movelist.append([i,j])
     return movelist
+def Compare(func1,func2,games):
+    for i in range(games):
+        board = lib.BoardInit()
+        if board.o:
+            move = func1(board)
+        if not board.o:
+            move = func2(board)
+        board.MakeMove(board.o,move[0],move[1])
+        board.BoardFinished(move[0],o)
+        board.o = not board.o
+
 def main():
     play_game()
 if __name__ == '__main__':
