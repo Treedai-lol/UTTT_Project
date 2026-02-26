@@ -31,7 +31,7 @@ class MCTSNode():
             if child.visits == 0:
                 return child
 
-        def ucb(child):
+        def ucb(child:MCTSNode):
             exploit = child.wins / child.visits
             explore = c * math.sqrt(math.log(self.visits) / child.visits)
             return exploit + explore
@@ -40,18 +40,24 @@ class MCTSNode():
     
     def rollout(self): #uses random moves to finish the game, True or False for a win, None for a draw
         board = deepcopy(self.board)
-        o = board.o
-
         while True:
-            winner = board.GameFinished(o)
-            if winner is True:
-                return o
             moves = GetMoves(board)
             if not moves:
                 return None
             move = random.choice(moves)
             board.MakeMove(board.o,move[0],move[1])
-            o = not o
+            board.BoardFinished(move[0],board.o)
+            if board.wonboards[move[1]] != 0:
+                board.sb = 9
+            else:
+                board.sb = move[1]
+            winner = board.GameFinished(board.o)
+            #board.PrintBoard()
+            #print(board.wonboards)
+            #print("")
+            if winner is True:
+                return board.o
+            board.o = not board.o
     def backpropagate(self, winner):
         self.visits += 1
 
@@ -64,7 +70,7 @@ class MCTSNode():
             self.parent.backpropagate(winner)
 def mcts_search(root_state, iterations:int):
     root = MCTSNode(root_state, player=None)
-    for _ in range(iterations):
+    for i in range(iterations):
         node = root
 
         while not node.board.gg and node.is_fully_expanded():
@@ -81,8 +87,7 @@ def mcts_search(root_state, iterations:int):
 def play_game():
     board = lib.BoardInit()
     board.PrintBoard()
-    move = mcts_search(board,iterations=500)
-    print("debug")
+    move = mcts_search(board,iterations=50000)
     board.MakeMove(board.o,move[0],move[1])
     board.PrintBoard()
 def DumbEval(board:lib.Board,o:bool) ->int:
