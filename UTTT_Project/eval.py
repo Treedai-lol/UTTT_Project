@@ -86,17 +86,18 @@ def mcts_search(root_state, iterations=5000):
     best = max(root.children, key=lambda c: c.visits)
     """while root.children:
         print(root.children[-1].visits)
-        root.children.pop()"""
+        root.children.pop()
     for i in root.children:
         print(i.data())
-    print(root.data())
+    print(root.data())"""
     return best.move
 def play_game():
     board = lib.BoardInit()
     move = mcts_search(board)
     print(move)
-def DumbEval(board:lib.Board,o:bool) ->int:
-    return 0
+def RandomEval(board:lib.Board) ->int:
+    movelist = GetMoves(board)
+    return random.choice(movelist)
 def NaiveEval(board:lib.Board,o:bool) ->int:
     temp = 0
     wb = board.wonboards
@@ -141,7 +142,7 @@ def Compare(func1,func2,games)->list:
                 move = func2(board)
             board.MakeMove(o,move[0],move[1])
             board.BoardFinished(move[0],o)
-            if o & board.GameFinshed(o):
+            if o & board.GameFinished(o):
                 result[0]+=1
                 break
             elif board.GameFinished(o):
@@ -171,6 +172,7 @@ def Compare(func1,func2,games)->list:
     return result
 
 def main():
-    play_game()
+    print(Compare(mcts_search,RandomEval,1))
+    #play_game()
 if __name__ == '__main__':
     main()
