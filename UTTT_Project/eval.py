@@ -142,7 +142,7 @@ def Compare(func1,func2,games)->list:
                 move = func2(board)
             board.MakeMove(o,move[0],move[1])
             board.BoardFinished(move[0],o)
-            if o & board.GameFinished(o):
+            if o and board.GameFinished(o):
                 result[0]+=1
                 break
             elif board.GameFinished(o):
@@ -162,7 +162,7 @@ def Compare(func1,func2,games)->list:
                 move = func2(board)
             board.MakeMove(o,move[0],move[1])
             board.BoardFinished(move[0],o)
-            if o & board.GameFinshed(o):
+            if o & board.GameFinished(o):
                 result[1]+=1
                 break
             elif board.GameFinished(o):
@@ -172,7 +172,6 @@ def Compare(func1,func2,games)->list:
     return result
 
 def main():
-    print(Compare(mcts_search,RandomEval,1))
-    #play_game()
+    play_game()
 if __name__ == '__main__':
     main()

@@ -37,7 +37,7 @@ class Board():
                     b = True
                 if j == i[2]:
                     c = True
-            if a & b & c:
+            if a and b and c:
                 output = True
         if output & o == True:
             self.wonboards[index] = 1
@@ -66,7 +66,7 @@ class Board():
                     b = True
                 if j == i[2]:
                     c = True
-            if a & b & c:
+            if a and b and c:
                 output = True
         return output
     def InputMove(self,player:str) ->list: #takes "ab" as input, puts piece on board a, position b
