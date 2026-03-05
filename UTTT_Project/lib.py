@@ -1,3 +1,12 @@
+# !! after a function means it is only used if a person is inputting a move
+# the flow of a UTTT round should be:
+# call PrintBoard()?
+# input a legal move(could use GetMoves())
+# call MakeMove()
+# call BoardFinished()
+# call GameFinished()
+# flip board.o attribute
+# repeat
 class Board():
     def __init__(self, bs:list, wonboards:list, o:bool, sb:int) -> None:
         self.bs = bs
@@ -10,8 +19,9 @@ class Board():
                 for k in range(3*i,3*i+3):
                     for l in range(3*j,3*j+3):
                         print(self.bs[k][l],end=" ")
+                    print(" ",end="")
                 print("\n",end="")
-            pass
+            print("\n",end="")
         pass
     def GetOwnerShip(self,index:int,o:bool) ->list: #returns the indices of pieces owned
         output = []
@@ -69,14 +79,14 @@ class Board():
             if a and b and c:
                 output = True
         return output
-    def InputMove(self,player:str) ->list: #takes "ab" as input, puts piece on board a, position b
+    def InputMove(self,player:str) ->list: #takes "ab" as input, puts piece on board a, position b !!
         ret = []
         temp =  input(player+"'s turn, please make a move")
         temp = int(temp)
         ret.append(int((temp-temp%10)/10))
         ret.append(temp%10)
         return ret
-    def VerifyMove(self,a:int,b:int) ->int: #checks if the move is allowed
+    def VerifyMove(self,a:int,b:int) ->int: #checks if the move is allowed !!only for player inputs !!
         if a>8 or b>8: #check if index is in range
             return 1 
         elif self.bs[a][b] != 0: #check if square is occupied
@@ -87,7 +97,7 @@ class Board():
             return 4
         else: #all good
             return 0
-    def MakeMove(self,o:bool,a:int,b:int) ->None: #The target square MUST be empty
+    def MakeMove(self,o:bool,a:int,b:int) ->None: #The target square MUST be empty (also changes board.sb)
         if o:
             self.bs[a][b] = 1
         else:
@@ -119,26 +129,20 @@ class Board():
         self.GameFinished(o)
         self.o = not o
 def BoardInit() ->Board:
-    list = []
-    """for i in range(0,9):
-        list.append([])
-        for j in range(0,9):
-            list[i].append(0)"""
-    list = [[0,0,0,0,0,0,0,0,0],
+    list = [[1,1,1,1,1,1,1,1,1],
+            [2,2,2,2,2,2,2,2,2],
+            [1,1,1,1,1,1,1,1,1],
+            [2,2,2,2,2,2,2,2,2],
             [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0]]
+            [2,2,2,2,2,2,2,2,2],
+            [1,1,1,1,1,1,1,1,1],
+            [2,2,2,2,2,2,2,2,2],
+            [1,1,1,1,1,1,1,1,1]]
     wb = [0,0,0,0,0,0,0,0,0]
     board = Board(list,wb,True,9)
     return board
 def main():
     board = BoardInit()
-    board.GameFinished(True)
-    print(board.gg)
+    board.PrintBoard()
 if __name__ == '__main__':
     main()

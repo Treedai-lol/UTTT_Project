@@ -1,6 +1,8 @@
 import math
 import random
 import lib
+from time import perf_counter
+
 from copy import deepcopy
 
 class MCTSNode():
@@ -22,6 +24,7 @@ class MCTSNode():
         move = self.untried_moves.pop()
         new_board = deepcopy(self.board)
         new_board.MakeMove(new_board.o,move[0],move[1])
+        new_board.BoardFinished(move[0],new_board.o)
         new_board.o = not new_board.o
 
         child = MCTSNode(new_board, parent=self, move=move, player=self.board.o)
@@ -49,10 +52,9 @@ class MCTSNode():
                 return None
             #print(moves)
             move = random.choice(moves)
-            board.MakeMove(board.o,move[0],move[1])
+            board.MakeMove(o,move[0],move[1])
             board.BoardFinished(move[0],o)
-            winner = board.GameFinished(o)
-            if winner is True:
+            if board.GameFinished(o) is True:
                 #print(o)
                 return o
             #board.PrintBoard()
@@ -61,7 +63,6 @@ class MCTSNode():
             board.o = not board.o
     def backpropagate(self, winner):
         self.visits += 1
-
         if self.player is not None:
             if winner is None:
                 self.wins += 0.5
@@ -69,35 +70,29 @@ class MCTSNode():
                 self.wins += 1.0
         if self.parent:
             self.parent.backpropagate(winner)
-def mcts_search(root_state, iterations=5000):
-    root = MCTSNode(root_state, player=None)
+def mcts_search(root_board, iterations=500):
+    root = MCTSNode(root_board, player=None)
     for _ in range(iterations):
         node = root
 
-        while not node.board.GameFinished(node.board.o) and node.is_fully_expanded():
+        while not node.board.GameFinished(not node.board.o) and node.is_fully_expanded() and node.children:
             node = node.best_child()
 
-        if not node.board.GameFinished(node.board.o) and not node.is_fully_expanded():
+        if not node.board.GameFinished(not node.board.o) and not node.is_fully_expanded():
             node = node.expand()
-
-        winner = node.rollout()
+        
+        if node.board.GameFinished(not node.board.o):
+            winner = node.board.o
+        else:    
+            winner = node.rollout()
+        
         node.backpropagate(winner)
 
     best = max(root.children, key=lambda c: c.visits)
-    """while root.children:
-        print(root.children[-1].visits)
-        root.children.pop()
-    for i in root.children:
-        print(i.data())
-    print(root.data())"""
     return best.move
-def play_game():
-    board = lib.BoardInit()
-    move = mcts_search(board)
-    print(move)
-def RandomEval(board:lib.Board) ->int:
-    movelist = GetMoves(board)
-    return random.choice(movelist)
+    
+def RandomEval(board:lib.Board) ->list:
+    return random.choice(GetMoves(board))
 def NaiveEval(board:lib.Board,o:bool) ->int:
     temp = 0
     wb = board.wonboards
@@ -126,17 +121,18 @@ def GetMoves(board: lib.Board) ->list:
                if board.bs[i][j] == 0:
                     movelist.append([i,j])
     return movelist
-def Compare(func1,func2,games)->list:
+def Compare(func1:callable,func2:callable,games:int)->list:
     a = True
     result = [0,0,0]#func1 win, func2 win, draw
     for _ in range(games):
+        t1 = perf_counter()
         board = lib.BoardInit()
         while True:
             o = board.o
             if not GetMoves(board):
                 result[2]+=1
                 break
-            if  o:
+            if o:
                 move = func1(board)
             if not o:
                 move = func2(board)
@@ -149,29 +145,37 @@ def Compare(func1,func2,games)->list:
                 result[1]+=1
                 break
             board.o = not board.o
+        t2 = perf_counter()
+        print(t2-t1)
     for _ in range(games):
+        t1 = perf_counter()
         board = lib.BoardInit()
         while True:
             o = board.o
             if not GetMoves(board):
                 result[2]+=1
                 break
-            if  not o:
+            if not o:
                 move = func1(board)
             if o:
                 move = func2(board)
             board.MakeMove(o,move[0],move[1])
             board.BoardFinished(move[0],o)
-            if o & board.GameFinished(o):
+            if o and board.GameFinished(o):
                 result[1]+=1
                 break
             elif board.GameFinished(o):
                 result[0]+=1
                 break
             board.o = not board.o
+    t2 = perf_counter()
+    print(t2-t1)
     return result
 
 def main():
-    play_game()
+    t1 = perf_counter()
+    print(Compare(RandomEval,mcts_search,10))
+    t2 = perf_counter()
+    print(t2 - t1)
 if __name__ == '__main__':
     main()

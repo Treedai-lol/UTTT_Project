@@ -1,8 +1,10 @@
-import lib
+#import lib
 
 def main():
-    board = lib.BoardInit()
-    lib.PrintBoard(board)
+    for i in range(10):
+        while i==9:
+            break
+        print(i)
 
 if __name__ == '__main__':
     main()
