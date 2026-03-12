@@ -37,7 +37,16 @@ class Board():
                 if  self.bs[index][i] == 2:
                     output.append(i)
         return output
-    def BoardFinished(self,index:int,o:bool) ->bool: #returns whether the board has been finished
+    def MakeMove(self,o:bool,a:int,b:int) ->None: #merged with BoardFinished
+        if o:
+            self.bs[a][b] = 1
+        else:
+            self.bs[a][b] = 2
+        if self.wonboards[b] != 0:
+            self.sb = 9
+        else:
+            self.sb = b
+        index = a
         output = False
         piecelist = self.GetOwnerShip(index,o)
         winning = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
@@ -56,7 +65,6 @@ class Board():
             self.wonboards[index] = 1
         elif output:
             self.wonboards[index] = 2
-        return output
     def GameFinished(self,o:bool) ->bool: #returns whether the game has been finished
         output = False
         tmp = self.wonboards
@@ -100,37 +108,21 @@ class Board():
             return 4
         else: #all good
             return 0
-    def MakeMove(self,o:bool,a:int,b:int) ->None: #The target square MUST be empty (also changes board.sb)
-        if o:
-            self.bs[a][b] = 1
-        else:
-            self.bs[a][b] = 2
-        if self.wonboards[b] != 0:
-            self.sb = 9
-        else:
-            self.sb = b
-    def StartRound(self,o:bool) ->None: #some jumbled up shit
-        a = b = 99
-        self.PrintBoard()
-        if o:
-            player = "O"
-        else:
-            player = "X"
-        temp = self.InputMove(player)
-        a = temp[0]
-        b = temp[1]
-        if self.VerifyMove(a,b) == 0:
-            self.MakeMove(o,a,b)
-        else:
-            print("error "+str(self.VerifyMove(a,b)))
-            return
-        self.BoardFinished(a,o)
-        if self.wonboards[b] != 0:
-            self.sb = 9
-        else:
-           self.sb = b
-        self.GameFinished(o)
-        self.o = not o
+def StartRound(board:Board,o:bool) ->None: #some jumbled up shit
+    board.PrintBoard()
+    if o:
+        player = "O"
+    else:
+        player = "X"
+    temp = board.InputMove(player)
+    a = temp[0]
+    b = temp[1]
+    if board.VerifyMove(a,b) == 0:
+        board.MakeMove(o,a,b)
+    else:
+        print("error "+str(board.VerifyMove(a,b)))
+        return
+    board.o = not o
 def BoardInit() ->Board:
     """list = [[1,1,1,1,1,1,1,1,1],
             [2,2,2,2,2,2,2,2,2],
@@ -155,6 +147,7 @@ def BoardInit() ->Board:
     return board
 def main():
     board = BoardInit()
-    board.PrintBoard()
+    while not board.GameFinished(not board.o):
+        StartRound(board,board.o)
 if __name__ == '__main__':
     main()

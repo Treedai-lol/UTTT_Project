@@ -25,7 +25,6 @@ class MCTSNode():
         move = self.untried_moves.pop()
         new_board = self.board.copy()
         new_board.MakeMove(new_board.o,move[0],move[1])
-        new_board.BoardFinished(move[0],new_board.o)
         new_board.o = not new_board.o
 
         child = MCTSNode(new_board, parent=self, move=move, player=self.board.o)
@@ -54,7 +53,6 @@ class MCTSNode():
                 return None
             move = random.choice(moves)
             board.MakeMove(o,move[0],move[1])
-            board.BoardFinished(move[0],o)
             if board.GameFinished(o) is True:
                 return o
             board.o = not board.o
@@ -85,11 +83,29 @@ def mcts_search(root_board, iterations=500):
             winner = node.rollout()
 
         node.backpropagate(winner)
-        
-    eval = root.wins/root.visits*100-50
-    print(eval)
     best = max(root.children, key=lambda c: c.visits)
     return best.move
+def mcts_eval(root_board, iterations=500)->int:
+    root = MCTSNode(root_board, player=False)
+    for _ in range(iterations):
+        node = root
+        while not node.board.GameFinished(not node.board.o) and node.is_fully_expanded() and not node.terminal:
+            node = node.best_child()
+
+        if not node.board.GameFinished(not node.board.o) and not node.is_fully_expanded() and not node.terminal:
+            node = node.expand()
+        
+        if node.board.GameFinished(not node.board.o):
+            winner = node.board.o
+        elif node.terminal:
+            winner = None
+        else:    
+            winner = node.rollout()
+
+        node.backpropagate(winner)
+        
+    eval = root.wins/root.visits*100-50
+    return eval
     
 def RandomEval(board:lib.Board) ->list:
     return random.choice(GetMoves(board))
@@ -136,7 +152,6 @@ def Compare(func1:callable,func2:callable,games:int)->list:
             if not o:
                 move = func2(board)
             board.MakeMove(o,move[0],move[1])
-            board.BoardFinished(move[0],o)
             if o and board.GameFinished(o):
                 result[0]+=1
                 break
@@ -156,7 +171,6 @@ def Compare(func1:callable,func2:callable,games:int)->list:
             if o:
                 move = func2(board)
             board.MakeMove(o,move[0],move[1])
-            board.BoardFinished(move[0],o)
             if o and board.GameFinished(o):
                 result[1]+=1
                 break
@@ -184,14 +198,49 @@ def Compare(func1:callable,func2:callable,games:int)->list:
 23 board . pop ()
 24 return best_value"""
 def minimax(board:lib.Board,depth:int,maximize:bool)->int:
-    if board.GameFinished(True): return 10000
-    elif board.GameFinished(False): return -10000
+    if board.GameFinished(True): return 50
+    elif board.GameFinished(False): return -50
     elif GetMoves(board) == []: return 0
     if depth == 0:
-        pass
+        return mcts_eval(board)
+    movelist = GetMoves(board)
+    if maximize:
+        num = -100
+        for i in movelist:
+            board.MakeMove(i[0],i[1])
+            num = max(num,minimax(board,depth-1,not maximize))
+            #unmake move
+        return num
+    if not maximize:
+        num = -100
+        for i in movelist:
+            board.MakeMove(i[0],i[1])
+            num = min(num,minimax(board,depth-1,not maximize))
+            #unmake move
+        return num
+
+def IntegrityCheck():
+    checks = 2
+    fails = 0
+    try:
+        mcts_search(lib.BoardInit())
+    except Exception as e:
+        print("MCTS_Search is comprimised, throwing error: "+str(e))
+        fails+=1
+    else:
+        print("MCTS_Search OK")
+    try:
+        mcts_eval(lib.BoardInit())
+    except Exception as e:
+        print("MCTS_Search is comprimised, throwing error: "+str(e))
+        fails+=1
+    else:
+        print("MCTS_Eval OK")    
+    print(f'{checks} check(s) in total.')
+    print(f'{fails} fail(s) in total.')
 def main():
     t1 = perf_counter()
-    print(mcts_search(lib.BoardInit()))
+    IntegrityCheck()
     t2 = perf_counter()
     print(t2 - t1)
 if __name__ == '__main__':
