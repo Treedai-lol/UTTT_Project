@@ -1,9 +1,9 @@
+#the more wins that the root mcts node has, the better the position is for X aka False
 import math
 import random
 import lib
 from time import perf_counter
 
-from copy import deepcopy
 
 class MCTSNode():
     def __init__(self, board:lib.Board, parent=None, move=None, player=None):
@@ -15,6 +15,7 @@ class MCTSNode():
         self.visits = 0
         self.wins = 0.0
         self.untried_moves = GetMoves(board)
+        self.terminal = (GetMoves(board)==[])
     def data(self):
         return self.move, self.player, self.visits, self.wins, self.untried_moves
     def is_fully_expanded(self):
@@ -22,7 +23,7 @@ class MCTSNode():
     
     def expand(self):
         move = self.untried_moves.pop()
-        new_board = deepcopy(self.board)
+        new_board = self.board.copy()
         new_board.MakeMove(new_board.o,move[0],move[1])
         new_board.BoardFinished(move[0],new_board.o)
         new_board.o = not new_board.o
@@ -32,6 +33,7 @@ class MCTSNode():
         return child
     
     def best_child(self, c=1.4):
+        #print(self.children)
         for child in self.children:
             if child.visits == 0:
                 return child
@@ -44,22 +46,17 @@ class MCTSNode():
         return max(self.children, key=ucb)
     
     def rollout(self): #uses random moves to finish the game, True or False for a win, None for a draw
-        board = deepcopy(self.board)
+        board = self.board.copy()
         while True:
             o = board.o
             moves = GetMoves(board)
             if not moves:
                 return None
-            #print(moves)
             move = random.choice(moves)
             board.MakeMove(o,move[0],move[1])
             board.BoardFinished(move[0],o)
             if board.GameFinished(o) is True:
-                #print(o)
                 return o
-            #board.PrintBoard()
-            #print(board.wonboards)
-            #print("")
             board.o = not board.o
     def backpropagate(self, winner):
         self.visits += 1
@@ -71,23 +68,26 @@ class MCTSNode():
         if self.parent:
             self.parent.backpropagate(winner)
 def mcts_search(root_board, iterations=500):
-    root = MCTSNode(root_board, player=None)
+    root = MCTSNode(root_board, player=False)
     for _ in range(iterations):
         node = root
-
-        while not node.board.GameFinished(not node.board.o) and node.is_fully_expanded() and node.children:
+        while not node.board.GameFinished(not node.board.o) and node.is_fully_expanded() and not node.terminal:
             node = node.best_child()
 
-        if not node.board.GameFinished(not node.board.o) and not node.is_fully_expanded():
+        if not node.board.GameFinished(not node.board.o) and not node.is_fully_expanded() and not node.terminal:
             node = node.expand()
         
         if node.board.GameFinished(not node.board.o):
             winner = node.board.o
+        elif node.terminal:
+            winner = None
         else:    
             winner = node.rollout()
-        
-        node.backpropagate(winner)
 
+        node.backpropagate(winner)
+        
+    eval = root.wins/root.visits*100-50
+    print(eval)
     best = max(root.children, key=lambda c: c.visits)
     return best.move
     
@@ -125,7 +125,6 @@ def Compare(func1:callable,func2:callable,games:int)->list:
     a = True
     result = [0,0,0]#func1 win, func2 win, draw
     for _ in range(games):
-        t1 = perf_counter()
         board = lib.BoardInit()
         while True:
             o = board.o
@@ -145,10 +144,7 @@ def Compare(func1:callable,func2:callable,games:int)->list:
                 result[1]+=1
                 break
             board.o = not board.o
-        t2 = perf_counter()
-        print(t2-t1)
     for _ in range(games):
-        t1 = perf_counter()
         board = lib.BoardInit()
         while True:
             o = board.o
@@ -168,13 +164,34 @@ def Compare(func1:callable,func2:callable,games:int)->list:
                 result[0]+=1
                 break
             board.o = not board.o
-    t2 = perf_counter()
-    print(t2-t1)
     return result
 
+""" 
+9 if ( maximize ):
+10 best_value = -99999
+11 for move in board . legal_moves :
+12 board . push ( move )
+13 best_value = max ( best_value ,
+14 minimax ( board , depth -1 , not maximize ))
+15 board . pop ()
+16 return best_value
+17 if ( minimize ):
+18 best_value = 99999
+19 for move in board . legal_moves :
+20 board . push ( move )
+21 best_value = min ( best_value ,
+22 minimax ( board , depth -1 , not maximize ))
+23 board . pop ()
+24 return best_value"""
+def minimax(board:lib.Board,depth:int,maximize:bool)->int:
+    if board.GameFinished(True): return 10000
+    elif board.GameFinished(False): return -10000
+    elif GetMoves(board) == []: return 0
+    if depth == 0:
+        pass
 def main():
     t1 = perf_counter()
-    print(Compare(RandomEval,mcts_search,10))
+    print(mcts_search(lib.BoardInit()))
     t2 = perf_counter()
     print(t2 - t1)
 if __name__ == '__main__':

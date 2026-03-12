@@ -7,12 +7,15 @@
 # call GameFinished()
 # flip board.o attribute
 # repeat
+from copy import deepcopy
 class Board():
     def __init__(self, bs:list, wonboards:list, o:bool, sb:int) -> None:
         self.bs = bs
         self.o = o
         self.wonboards = wonboards
         self.sb = sb
+    def copy(self):
+        return Board(deepcopy(self.bs),deepcopy(self.wonboards),deepcopy(self.o),deepcopy(self.sb))
     def PrintBoard(self) ->None: #print board function
         for i in range(0,3):
             for j in range(0,3):
@@ -129,7 +132,7 @@ class Board():
         self.GameFinished(o)
         self.o = not o
 def BoardInit() ->Board:
-    list = [[1,1,1,1,1,1,1,1,1],
+    """list = [[1,1,1,1,1,1,1,1,1],
             [2,2,2,2,2,2,2,2,2],
             [1,1,1,1,1,1,1,1,1],
             [2,2,2,2,2,2,2,2,2],
@@ -137,7 +140,16 @@ def BoardInit() ->Board:
             [2,2,2,2,2,2,2,2,2],
             [1,1,1,1,1,1,1,1,1],
             [2,2,2,2,2,2,2,2,2],
-            [1,1,1,1,1,1,1,1,1]]
+            [1,1,1,1,1,1,1,1,1]]"""
+    list = [[0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0]]
     wb = [0,0,0,0,0,0,0,0,0]
     board = Board(list,wb,True,9)
     return board
