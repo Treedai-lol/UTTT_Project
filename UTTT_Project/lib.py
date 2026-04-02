@@ -37,7 +37,8 @@ class Board():
                 if  self.bs[index][i] == 2:
                     output.append(i)
         return output
-    def MakeMove(self,o:bool,a:int,b:int) ->None: #merged with BoardFinished
+    def MakeMove(self,a:int,b:int) ->None: #merged with BoardFinished
+        o = self.o
         if o:
             self.bs[a][b] = 1
         else:
@@ -65,6 +66,29 @@ class Board():
             self.wonboards[index] = 1
         elif output:
             self.wonboards[index] = 2
+        self.o = not o
+    def UnmakeMove(self,a:int,b:int,prevsb:int)->None:
+        o = self.o
+        self.bs[a][b] = 0
+        self.sb = prevsb
+        index = a
+        output = False
+        piecelist = self.GetOwnerShip(index,o)
+        winning = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
+        for i in winning:
+            a = b = c = False
+            for j in piecelist:
+                if j == i[0]:
+                    a = True
+                if j == i[1]:
+                    b = True
+                if j == i[2]:
+                    c = True
+            if a and b and c:
+                output = True
+        if not output:
+            self.wonboards[index] = 0
+        self.o = not o
     def GameFinished(self,o:bool) ->bool: #returns whether the game has been finished
         output = False
         tmp = self.wonboards
@@ -146,8 +170,6 @@ def BoardInit() ->Board:
     board = Board(list,wb,True,9)
     return board
 def main():
-    board = BoardInit()
-    while not board.GameFinished(not board.o):
-        StartRound(board,board.o)
+    pass
 if __name__ == '__main__':
     main()
