@@ -1,14 +1,12 @@
-#the more wins that the root mcts node has, the better the position is for X aka False
 import math
 import random
-import lib
-import neural
 from time import perf_counter
-from copy import deepcopy
+from lib import Board
+from lib import BoardInit
 
 
 class MCTSNode():
-    def __init__(self, board:lib.Board, prob:float,parent=None, move=None, player=None):
+    def __init__(self, board:Board, parent=None, move=None, player=None):
         self.board = board
         self.parent = parent
         self.move = move
@@ -16,20 +14,27 @@ class MCTSNode():
         self.children = []
         self.visits = 0
         self.wins = 0.0
-        self.terminal = (GetMoves(board)==[])
-        self.prob = prob
+        self.untried_moves = board.GetMoves()
+    def terminal_state(self):
+        ret = 0
+        if(self.board.GetMoves()==[]):
+            ret = 3
+        if(self.board.GameFinished!=0):
+            ret = self.board.GameFinished()
+        return ret
     def is_fully_expanded(self):
         return len(self.untried_moves) == 0
     
     def expand(self):
-        temp = NaiveEval(self.board).pop(0)
-        j = 0
-        prevsb = deepcopy(self.board.sb)
-        for i in GetMoves(self.board):
-            self.board.MakeMove(i[0],i[1])
-            self.children.append(MCTSNode(self.board,self,i,self.board.o,temp[j]))
-            j+=1
-            self.board.UnmakeMove(i[0],i[1],prevsb)
+        move = self.untried_moves.pop()
+        new_board = self.board.copy()
+        new_board.MakeMove(new_board.o,move[0],move[1])
+        new_board.o = not new_board.o
+
+        child = MCTSNode(new_board, parent=self, move=move, player=self.board.o)
+        self.children.append(child)
+        return child
+    
     def best_child(self, c=1.4):
         for child in self.children:
             if child.visits == 0:
@@ -42,11 +47,25 @@ class MCTSNode():
 
         return max(self.children, key=ucb)
     
-    def rollout(self)->list: #returns the average amount of wins for O(0 to 1)
-        return NaiveEval(self.board)[0]
-    def backpropagate(self, wins:float):
+    def rollout(self): #uses random moves to finish the game, True or False for a win, None for a draw
+        board = self.board.copy()
+        while True:
+            o = board.o
+            moves = board.GetMoves()
+            if not moves:
+                return None
+            move = random.choice(moves)
+            board.MakeMove(o,move[0],move[1])
+            if board.GameFinished(o) is True:
+                return o
+            board.o = not board.o
+    def backpropagate(self, winner):
         self.visits += 1
-        self.wins+=wins
+        if self.player is not None:
+            if winner is None:
+                self.wins += 0.5
+            elif winner == self.player:
+                self.wins += 1.0
         if self.parent:
             self.parent.backpropagate(winner)
 def mcts_search(root_board, iterations=500):
@@ -59,47 +78,43 @@ def mcts_search(root_board, iterations=500):
         if not node.board.GameFinished(not node.board.o) and not node.is_fully_expanded() and not node.terminal:
             node = node.expand()
         
-        wins = node.rollout()
+        if node.board.GameFinished(not node.board.o):
+            winner = node.board.o
+        elif node.terminal:
+            winner = None
+        else:    
+            winner = node.rollout()
 
-        node.backpropagate(wins)
+        node.backpropagate(winner)
     best = max(root.children, key=lambda c: c.visits)
     return best.move
     
-def RandomEval(board:lib.Board) ->list:
-    return random.choice(GetMoves(board))
-def NaiveEval(board:lib.Board) ->list:
-    output = []
+def RandomEval(board:Board) ->list:
+    return random.choice(board.GetMoves())
+def NaiveEval(board:Board,o:bool) ->int:
+    temp = 0
     wb = board.wonboards
-    for i in wb:
-        if i == 1:
-            temp+=1
-        if i == 0:
-            temp+=0.5
-    temp/=9
-    output.append(temp)
-    for i in GetMoves(board):
-        output.append(1/len(GetMoves))
-    return temp
-def GetMoves(board: lib.Board) ->list:
-    movelist = []
-    if board.sb != 9:
-        for i in range(0,9):
-            if board.bs[board.sb][i] == 0:
-               movelist.append([board.sb,i])
+    if o:
+        for i in wb:
+            if i == 1:
+                temp = temp+1
+            if i == 2:
+                temp = temp-1
     else:
-        for i in range(0,9):
-            for j in range(0,9):
-               if board.bs[i][j] == 0:
-                    movelist.append([i,j])
-    return movelist
+        for i in wb:
+            if i == 1:
+                temp = temp-1
+            if i == 2:
+                temp = temp+1
+    return temp
 def Compare(func1:callable,func2:callable,games:int)->list:
     a = True
     result = [0,0,0]#func1 win, func2 win, draw
     for _ in range(games):
-        board = lib.BoardInit()
+        board = BoardInit()
         while True:
             o = board.o
-            if not GetMoves(board):
+            if not board.GetMoves():
                 result[2]+=1
                 break
             if o:
@@ -115,10 +130,10 @@ def Compare(func1:callable,func2:callable,games:int)->list:
                 break
             board.o = not board.o
     for _ in range(games):
-        board = lib.BoardInit()
+        board = BoardInit()
         while True:
             o = board.o
-            if not GetMoves(board):
+            if not board.GetMoves():
                 result[2]+=1
                 break
             if not o:
@@ -139,19 +154,12 @@ def IntegrityCheck():
     checks = 2
     fails = 0
     try:
-        mcts_search(lib.BoardInit())
+        mcts_search(BoardInit())
     except Exception as e:
         print("MCTS_Search is comprimised, throwing error: "+str(e))
         fails+=1
     else:
-        print("MCTS_Search OK")
-    try:
-        mcts_eval(lib.BoardInit())
-    except Exception as e:
-        print("MCTS_Search is comprimised, throwing error: "+str(e))
-        fails+=1
-    else:
-        print("MCTS_Eval OK")    
+        print("MCTS_Search OK")  
     print(f'{checks} check(s) in total.')
     print(f'{fails} fail(s) in total.')
 def main():
