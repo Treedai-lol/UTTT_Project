@@ -3,8 +3,8 @@
 # [81:90] wonboards 0 not won 1 o 2 x
 # [90:91] sb int 0-9
 # [91:92] player 1 o 2 x
-# repeat
-from copy import deepcopy
+# for move representation: [67] is on floor(67/9)=6 and 67%9=4
+from math import floor
 WINNING = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
 class Board():
     def __init__(self, raw: list) -> None:
@@ -13,8 +13,19 @@ class Board():
         self.wonboards = raw[81:90]
         self.sb = raw[90]
         self.player = raw[91]
-    def copy(self):
-        return Board(deepcopy(self.bs),deepcopy(self.wonboards),deepcopy(self.o),deepcopy(self.sb))
+    def OutputList(self) ->list:
+        ret = []
+        ret.extend(self.bs)
+        ret.extend(self.wonboards)
+        ret.append(self.sb)
+        ret.append(self.player)
+        return ret
+    def copy(self)->list:
+        raw = self.OutputList()
+        new = []
+        for i in range(92):
+            new.append(raw[i])
+        return Board(new)
     def PrintBoard(self) ->None: #print board function
         for i in range(0,3):
             for j in range(0,3):
@@ -36,17 +47,17 @@ class Board():
                 if  self.bs[index*9+i] == 2:
                     output.append(i)
         return output
-    def MakeMove(self,a:int,b:int) ->None: #merged with BoardFinished
+    def MakeMove(self,move:int) ->None: #merged with BoardFinished
         o = self.player
         if o==1:
-            self.bs[a][b] = 1
+            self.bs[move] = 1
         else:
-            self.bs[a][b] = 2
-        if self.wonboards[b] != 0:
+            self.bs[move] = 2
+        if self.wonboards[move%9] != 0:
             self.sb = 9
         else:
-            self.sb = b
-        index = a
+            self.sb = move%9
+        index = floor(move/9)
         wonsmallboard = False
         piecelist = self.GetOwnerShip(index,o)
         for i in WINNING:
@@ -68,11 +79,11 @@ class Board():
             self.player = 2
         else:
             self.player = 1
-    def UnmakeMove(self,a:int,b:int,prevsb:int)->None:
+    def UnmakeMove(self,move:int,prevsb:int)->None:
         o = self.player
-        self.bs[a][b] = 0
+        self.bs[move] = 0
         self.sb = prevsb
-        index = a
+        index = floor(move/9)
         output = False
         piecelist = self.GetOwnerShip(index,o)
         for i in WINNING:
@@ -92,7 +103,7 @@ class Board():
             self.player = 2
         else:
             self.player = 1
-    def GameFinished(self) ->int: #returns whether the game has been finished
+    def GameFinished(self) ->int: #returns 0,1,2
         output = 0
         tmp = self.wonboards
         olist = []
@@ -130,12 +141,12 @@ class Board():
         if self.sb != 9:
             for i in range(0,9):
                 if self.bs[self.sb*9+i] == 0:
-                    movelist.append([self.sb,i])
+                    movelist.append(self.sb*9+i)
         else:
             for i in range(0,9):
                 for j in range(0,9):
                     if self.bs[9*i+j] == 0:
-                        movelist.append([i,j])
+                        movelist.append([i*9+j])
         return movelist
 def BoardInit(flavor=0) ->Board:
     if flavor==0:
@@ -175,7 +186,7 @@ def BoardInit(flavor=0) ->Board:
     board = Board(raw)
     return board
 def main():
-    board = BoardInit()
-    print(len(board.GetMoves()))
+    board = BoardInit(1)
+    print(board.OutputList())
 if __name__ == '__main__':
     main()

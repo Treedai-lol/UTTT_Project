@@ -2,10 +2,12 @@ from copy import deepcopy
 from time import perf_counter
 
 def main():
-    t1 = perf_counter()
-    a = 10
-    for i in range(1000000):
-        b = deepcopy(a)
-    print(perf_counter()-t1)
+    raw = [1,2,3,4,5]
+    new = []
+    for i in range(5):
+        new.append(raw[i])
+    new[2] = 67
+    print(raw)
+    print(new)
 if __name__ == '__main__':
     main()
