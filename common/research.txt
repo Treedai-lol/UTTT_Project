@@ -1,0 +1,26 @@
+Research papers of UTTT:
+    -Name-
+        At Most 43 Moves, At Least 29
+        Optimal Strategies and Bounds for Ultimate Tic-Tac-Toe
+    -Material-
+        https://arxiv.org/abs/2006.02353
+    -Notes-
+        This version of UTTT is different to the one I'm analysing, notably, a player can only freely play when the board he was 
+        sent to is full, as opposed to just being won, in my example.
+    -End-
+    -Name-
+
+    
+
+
+
+
+
+--coding notes--
+2025/12/18:
+    wonboards attribute in Board object will only update every time BoardFinished is called
+2026/01/22:
+    be cautious when dealing with the o attribute, the sequence might get messy
+2026/05/07:
+    when a small board is tied and is full, the player sent to the board can also play anywhere!!
+    CHANGE NEXT TIME
