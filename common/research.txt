@@ -9,6 +9,11 @@ Research papers of UTTT:
         sent to is full, as opposed to just being won, in my example.
     -End-
     -Name-
+        Reinforcement Learning Project: Ultimate Tic-Tac-Toe
+    -Material-
+        https://josselinsomervilleroberts.github.io/papers/Report_INF581.pdf
+    -Notes-
+        
 
     
 
