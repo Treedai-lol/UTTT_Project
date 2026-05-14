@@ -36,6 +36,11 @@ class Board():
                 print("\n",end="")
             print("\n",end="")
         pass
+    def Info(self) ->None:
+        self.PrintBoard()
+        print(self.wonboards)
+        print("Board to play in: "+str(self.sb))
+        print("Player: "+str(self.player))
     def GetOwnerShip(self,index:int,player:int) ->list: #returns the indices of pieces owned
         output = []
         if player==1:
@@ -71,7 +76,9 @@ class Board():
                     c = True
             if a and b and c:
                 wonsmallboard = True
-        if wonsmallboard & (o==1):
+        if self.IsDraw(index):
+            self.wonboards[index] = 3
+        elif wonsmallboard & (o==1):
             self.wonboards[index] = 1
         elif wonsmallboard:
             self.wonboards[index] = 2
@@ -103,7 +110,12 @@ class Board():
             self.player = 2
         else:
             self.player = 1
-    def GameFinished(self) ->int: #returns 0,1,2
+    def IsDraw(self,index:int)->bool:
+        for i in range(0,9):
+            if(self.bs[index*9+i]==0):
+                return False
+        return True
+    def GameFinished(self) ->int: #returns 0,1,2,3
         output = 0
         tmp = self.wonboards
         olist = []
@@ -135,6 +147,8 @@ class Board():
                     c = True
             if a and b and c:
                 output = 2
+        if self.GetMoves()==[]:
+            output = 3
         return output
     def GetMoves(self) ->list:
         movelist = []
@@ -145,8 +159,8 @@ class Board():
         else:
             for i in range(0,9):
                 for j in range(0,9):
-                    if self.bs[9*i+j] == 0:
-                        movelist.append([i*9+j])
+                    if self.bs[i*9+j] == 0:
+                        movelist.append(i*9+j)
         return movelist
 def BoardInit(flavor=0) ->Board:
     if flavor==0:
@@ -182,11 +196,24 @@ def BoardInit(flavor=0) ->Board:
                 0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0]
         extra = [1,1,0,1,0,1,2,2,2,9,1]
+    if flavor==3:
+        raw =  [0,1,2,1,2,1,1,2,1,
+                0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0]
+        extra = [0,0,0,0,0,0,0,0,0,9,2]
     raw.extend(extra)
     board = Board(raw)
     return board
 def main():
-    board = BoardInit(1)
-    print(board.OutputList())
+    board = BoardInit(3)
+    board.Info()
+    board.MakeMove(0)
+    board.Info()
 if __name__ == '__main__':
     main()
