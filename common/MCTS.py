@@ -14,9 +14,9 @@ class MCTSNode():
         self.board = board
         self.parent = parent
         self.move = move
-        self.player = player
+        self.player = player # 1 FOR O, 2 FOR X
         self.children = []
-        self.visits = 0
+        self.visits = 0.0
         self.wins = 0.0
         self.untried_moves = board.GetMoves()
     
@@ -25,6 +25,8 @@ class MCTSNode():
             print(i.move,end=" ")
             print(i.visits,end=" ")
             print(i.wins)
+        print(self.visits)
+        print(self.wins)
     def is_fully_expanded(self):
         return len(self.untried_moves) == 0
     
@@ -43,7 +45,11 @@ class MCTSNode():
                 return child
 
         def ucb(child):
-            exploit = child.wins / child.visits
+            if self.player==2:
+                winlocal = child.wins
+            elif self.player==1:
+                winlocal = child.visits-child.wins
+            exploit = winlocal / child.visits
             explore = c * math.sqrt(math.log(self.visits) / child.visits)
             return exploit + explore
 
@@ -68,7 +74,11 @@ class MCTSNode():
         if self.parent:
             self.parent.backpropagate(winner)
 def mcts_search(root_board, iterations=500):
-    root = MCTSNode(root_board, player=False)
+    if(root_board.player==1):
+        p = 2
+    if(root_board.player==2):
+        p = 1
+    root = MCTSNode(root_board,player=p)
     for i in range(iterations):
         node = root
         while node.is_fully_expanded() and node.board.GameFinished()==0:
@@ -89,16 +99,16 @@ def mcts_search(root_board, iterations=500):
 
         node.backpropagate(winner)
     best = max(root.children, key=lambda c: c.visits)
-    root.getinfo()
+    #root.getinfo()
     return best.move
 def ChooseRolloutMove(moves:list)->int:
     return random.choice(moves) 
 
 def main():
-    t1 = perf_counter()
     board = BoardInit()
-    print(mcts_search(board,50000))
+    print(mcts_search(board,5000))
+if __name__ == '__main__':
+    t1 = perf_counter()
+    main()
     t2 = perf_counter()
     print(t2 - t1)
-if __name__ == '__main__':
-    main()

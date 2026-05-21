@@ -76,12 +76,12 @@ class Board():
                     c = True
             if a and b and c:
                 wonsmallboard = True
-        if self.IsDraw(index):
-            self.wonboards[index] = 3
-        elif wonsmallboard & (o==1):
+        if wonsmallboard & (o==1):
             self.wonboards[index] = 1
         elif wonsmallboard:
             self.wonboards[index] = 2
+        elif self.IsDraw(index):
+            self.wonboards[index] = 3
         if o==1:
             self.player = 2
         else:
@@ -147,7 +147,7 @@ class Board():
                     c = True
             if a and b and c:
                 output = 2
-        if self.GetMoves()==[]:
+        if output==0 and self.GetMoves()==[]:
             output = 3
         return output
     def GetMoves(self) ->list:
