@@ -1,13 +1,12 @@
-from copy import deepcopy
-from time import perf_counter
+import lib
+import MCTS
 
 def main():
-    raw = [1,2,3,4,5]
-    new = []
-    for i in range(5):
-        new.append(raw[i])
-    new[2] = 67
-    print(raw)
-    print(new)
+    board = lib.BoardInit()
+    while True:
+        move = MCTS.mcts_search(board,5)
+        board.MakeMove(move)
+        board.GameFinished()
+        move = int(input("move is"))
 if __name__ == '__main__':
     main()

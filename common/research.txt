@@ -1,4 +1,4 @@
-Research papers of UTTT:
+--research--
     -Name-
         At Most 43 Moves, At Least 29
         Optimal Strategies and Bounds for Ultimate Tic-Tac-Toe
@@ -13,12 +13,7 @@ Research papers of UTTT:
     -Material-
         https://josselinsomervilleroberts.github.io/papers/Report_INF581.pdf
     -Notes-
-        
-
-    
-
-
-
+---------------
 
 
 --coding notes--
@@ -29,3 +24,14 @@ Research papers of UTTT:
 2026/05/07:
     when a small board is tied and is full, the player sent to the board can also play anywhere!!
     CHANGE NEXT TIME
+--------------
+
+
+--version control--
+26.5.21.1: 
+    speed:
+        1s: 1149/s
+        10s: 1203.2/s
+        100s: 996.82/s
+    notes:
+        This is the most basic version of MCTS, and can be used as a baseline.

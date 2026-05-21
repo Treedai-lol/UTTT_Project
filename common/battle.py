@@ -1,9 +1,16 @@
+import sys
+from pathlib import Path
+
+root_dir = Path(__file__).resolve().parent.parent
+sys.path.append(str(root_dir))
+
 from lib import Board
 from lib import BoardInit
-from math import floor
 from eval import RandomEval
 from time import perf_counter
 from MCTS import mcts_search
+from historical.MCTS_26_5_21_1 import mcts_search as baseline
+
 def Compare(func1:callable,func2:callable,games:int)->list:
     result = [0,0,0]#func1 win, func2 win, draw
     for _ in range(games):
@@ -15,9 +22,6 @@ def Compare(func1:callable,func2:callable,games:int)->list:
             if o==2:
                 move = func2(board)
             board.MakeMove(move)
-            print("------------------------")
-            board.PrintBoard()
-            #print(str(floor(move/9))+str(move%9))
             if board.GameFinished()==1:
                 result[0]+=1
                 break
@@ -47,7 +51,7 @@ def Compare(func1:callable,func2:callable,games:int)->list:
                 break
     return result
 def main():
-    print(Compare(mcts_search,RandomEval,10))
+    print(Compare(mcts_search,baseline,1))
 if __name__ == '__main__':
     t1 = perf_counter()
     main()

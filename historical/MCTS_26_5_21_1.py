@@ -1,8 +1,14 @@
+import sys
+from pathlib import Path
+
+root_dir = Path(__file__).resolve().parent.parent
+sys.path.append(str(root_dir))
+
 import math
 import random
 from time import perf_counter
-from lib import Board
-from lib import BoardInit
+from common.lib import Board
+from common.lib import BoardInit
 # For MCTS: 0 stands for not yet determined, 1 is o win, 2 is x win, 3 is draw
 # For the backpropogation, 0.5 is a draw and 1 is o win, 0 is x win
 
@@ -105,15 +111,7 @@ def mcts_search(root_board, time=1):
     #root.getinfo()
     return best.move
 def ChooseRolloutMove(moves:list)->int:
-    weight = []
-    for i in moves:
-        if i%9==4: #center
-            weight.append(5)
-        elif i%9==0 or i%9==2 or i%9==6 or i%9==8: #corner
-            weight.append(3)
-        else: #edge
-            weight.append(2)
-    return random.choices(moves,weights=weight)[0] 
+    return random.choice(moves) 
 
 def main():
     board = BoardInit()
