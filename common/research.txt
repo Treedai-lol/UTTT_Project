@@ -46,3 +46,8 @@
         100s: 996.82/s
     notes:
         This is the most basic version of MCTS, and can be used as a baseline.
+26.5.28.1:
+    speed:
+        1s: 2552/s
+        10s: 2613.3/s
+        100s: 2367.21/s
