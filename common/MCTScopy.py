@@ -61,7 +61,7 @@ class MCTSNode():
             moves = board.GetMoves()
             if moves==[]:
                 return 0.5
-            move = ChooseRolloutMove(moves,0)
+            move = ChooseRolloutMove(moves,1)
             board.MakeMove(move)
             g = board.GameFinished()
             if g==1:
@@ -103,7 +103,7 @@ def mcts_search(root_board = BoardInit(), time=1):
         node.backpropagate(winner)
         t2 = perf_counter()
     best = max(root.children, key=lambda c: c.visits)
-    root.getinfo()
+    #root.getinfo()
     return best.move
 def ChooseRolloutMove(moves:list,type=0)->int:
     if type==0:
@@ -120,8 +120,8 @@ def ChooseRolloutMove(moves:list,type=0)->int:
 
 def main():
     board = BoardInit()
-    #mcts_search()
-    cProfile.run('mcts_search()')
+    print(mcts_search())
+    #cProfile.run('mcts_search()')
 if __name__ == '__main__':
     t1 = perf_counter()
     main()

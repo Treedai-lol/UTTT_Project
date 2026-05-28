@@ -13,6 +13,17 @@
     -Material-
         https://josselinsomervilleroberts.github.io/papers/Report_INF581.pdf
     -Notes-
+        ph
+    -End-
+    -Name-
+        Combining Simulated Annealing and Monte Carlo Tree Search for Expression Simplification
+    -Material-
+        https://arxiv.org/abs/1312.0841
+    -Notes-
+        This version of UTTT is different to the one I'm analysing, notably, a player can only freely play when the board he was 
+        sent to is full, as opposed to just being won, in my example.
+    -End-
+    
 ---------------
 
 

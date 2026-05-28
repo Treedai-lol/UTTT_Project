@@ -54,58 +54,34 @@ class Board():
         return output
     def MakeMove(self,move:int) ->None: #merged with BoardFinished
         o = self.player
-        if o==1:
-            self.bs[move] = 1
-        else:
-            self.bs[move] = 2
+        self.bs[move] = o
         if self.wonboards[move%9] != 0:
             self.sb = 9
         else:
             self.sb = move%9
         index = floor(move/9)
         wonsmallboard = False
-        piecelist = self.GetOwnerShip(index,o)
-        for i in WINNING:
-            a = b = c = False
-            for j in piecelist:
-                if j == i[0]:
-                    a = True
-                if j == i[1]:
-                    b = True
-                if j == i[2]:
-                    c = True
-            if a and b and c:
+        if self.wonboards[index]==0:
+            if self.bs[index*9+0]==o and self.bs[index*9+1]==o and self.bs[index*9+2]==o:
                 wonsmallboard = True
-        if wonsmallboard & (o==1):
-            self.wonboards[index] = 1
-        elif wonsmallboard:
-            self.wonboards[index] = 2
+            elif self.bs[index*9+3]==o and self.bs[index*9+4]==o and self.bs[index*9+5]==o:
+                wonsmallboard = True
+            elif self.bs[index*9+6]==o and self.bs[index*9+7]==o and self.bs[index*9+8]==o:
+                wonsmallboard = True
+            elif self.bs[index*9+0]==o and self.bs[index*9+3]==o and self.bs[index*9+6]==o:
+                wonsmallboard = True
+            elif self.bs[index*9+1]==o and self.bs[index*9+4]==o and self.bs[index*9+7]==o:
+                wonsmallboard = True
+            elif self.bs[index*9+2]==o and self.bs[index*9+5]==o and self.bs[index*9+8]==o:
+                wonsmallboard = True
+            elif self.bs[index*9+0]==o and self.bs[index*9+4]==o and self.bs[index*9+8]==o:
+                wonsmallboard = True
+            elif self.bs[index*9+2]==o and self.bs[index*9+4]==o and self.bs[index*9+6]==o:
+                wonsmallboard = True
+        if wonsmallboard:
+            self.wonboards[index] = o
         elif self.IsDraw(index):
             self.wonboards[index] = 3
-        if o==1:
-            self.player = 2
-        else:
-            self.player = 1
-    def UnmakeMove(self,move:int,prevsb:int)->None:
-        o = self.player
-        self.bs[move] = 0
-        self.sb = prevsb
-        index = floor(move/9)
-        output = False
-        piecelist = self.GetOwnerShip(index,o)
-        for i in WINNING:
-            a = b = c = False
-            for j in piecelist:
-                if j == i[0]:
-                    a = True
-                if j == i[1]:
-                    b = True
-                if j == i[2]:
-                    c = True
-            if a and b and c:
-                output = True
-        if not output:
-            self.wonboards[index] = 0
         if o==1:
             self.player = 2
         else:
@@ -117,36 +93,31 @@ class Board():
         return True
     def GameFinished(self) ->int: #returns 0,1,2,3
         output = 0
-        tmp = self.wonboards
-        olist = []
-        xlist = []
-        for i in range(0,9):
-            if tmp[i] == 1:
-                olist.append(i)
-            if tmp[i] == 2:
-                xlist.append(i)
-        for i in WINNING:
-            a = b = c = False
-            for j in olist:
-                if j == i[0]:
-                    a = True
-                if j == i[1]:
-                    b = True
-                if j == i[2]:
-                    c = True
-            if a and b and c:
-                output = 1
+        for o in range(1,3):
+            if self.wonboards[0]==o and self.wonboards[1]==o and self.wonboards[2]==o:
+                output = o
                 break
-            a = b = c = False
-            for j in xlist:
-                if j == i[0]:
-                    a = True
-                if j == i[1]:
-                    b = True
-                if j == i[2]:
-                    c = True
-            if a and b and c:
-                output = 2
+            elif self.wonboards[3]==o and self.wonboards[4]==o and self.wonboards[5]==o:
+                output = o
+                break
+            elif self.wonboards[6]==o and self.wonboards[7]==o and self.wonboards[8]==o:
+                output = o
+                break
+            elif self.wonboards[0]==o and self.wonboards[3]==o and self.wonboards[6]==o:
+                output = o
+                break
+            elif self.wonboards[1]==o and self.wonboards[4]==o and self.wonboards[7]==o:
+                output = o
+                break
+            elif self.wonboards[2]==o and self.wonboards[5]==o and self.wonboards[8]==o:
+                output = o
+                break
+            elif self.wonboards[0]==o and self.wonboards[4]==o and self.wonboards[8]==o:
+                output = o
+                break
+            elif self.wonboards[2]==o and self.wonboards[4]==o and self.wonboards[6]==o:
+                output = o
+                break
         if output==0 and self.GetMoves()==[]:
             output = 3
         return output
@@ -211,9 +182,7 @@ def BoardInit(flavor=0) ->Board:
     board = Board(raw)
     return board
 def main():
-    board = BoardInit(3)
-    board.Info()
-    board.MakeMove(0)
-    board.Info()
+    board = BoardInit(2)
+    print(board.GameFinished())
 if __name__ == '__main__':
     main()
