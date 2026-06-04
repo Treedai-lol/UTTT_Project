@@ -120,8 +120,8 @@ def ChooseRolloutMove(moves:list,type=0)->int:
 
 def main():
     board = BoardInit()
-    #mcts_search()
-    cProfile.run('mcts_search()')
+    print(mcts_search())
+    #cProfile.run('mcts_search()')
 if __name__ == '__main__':
     t1 = perf_counter()
     main()

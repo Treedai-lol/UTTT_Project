@@ -25,7 +25,12 @@
     -End-
     
 ---------------
-
+--to do list--
+1.develop a heuristic evaluation algorithm to help the MCTS
+2.compute the branching factor of UTTT
+3.make an endgame solver
+4.use a bitboard to represent the UTTT board
+5.use suragnair's AlphaZeroGeneral to implement an engine
 
 --coding notes--
 2025/12/18:
@@ -36,8 +41,43 @@
     when a small board is tied and is full, the player sent to the board can also play anywhere!!
     CHANGE NEXT TIME
 --------------
+--additional research data--
+The winrate between choosing 39 and 40 as the first move is 38.51% to 39.86%, so it is infeasible
+to expect the MCTS to choose 40 every time.
+The first MCTS engine wins all 20 games against a random opponent.
+The first vs the second enigne has a record of [5,13,2]
+The average branching factor is calculated with edges/non-leaf lodes
 
-
+The amount of legal positions(possibly duplicate) after k moves is as such:
+    1 - 81
+    2 - 648
+    3 - 5832
+    4 - 40824
+    5 - 367416
+    6 - 2204496
+    7 - 19840464
+The amount of edges, non-leaf nodes, and the calculated average branching factor after k moves
+    1 - 81
+        1
+        81.0
+    2 - 801
+        82
+        9.7682926
+    3 - 7137
+        802
+        8.8990024
+    4 - 62217
+        7138
+        8.7163070
+    5 - 535473
+        62218
+        8.6064000
+    6 - 4553361
+        535474
+        8.5034212
+    7 - 38275713
+        4553362
+        8.4060333
 --version control--
 26.5.21.1: 
     speed:

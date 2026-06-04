@@ -8,9 +8,10 @@ from lib import Board
 from lib import BoardInit
 from eval import RandomEval
 from time import perf_counter
-from MCTS import mcts_search
-from MCTScopy import mcts_search as fancy
+from MCTS import mcts_search as A
+from MCTScopy import mcts_search as B
 from historical.MCTS_26_5_21_1 import mcts_search as baseline
+from historical.MCTS_26_5_28_1 import mcts_search as newbaseline
 
 def Compare(func1:callable,func2:callable,games:int)->list:
     result = [0,0,0]#func1 win, func2 win, draw
@@ -56,7 +57,7 @@ def Compare(func1:callable,func2:callable,games:int)->list:
                 break
     return result
 def main():
-    print(Compare(mcts_search,fancy,10))
+    print(Compare(baseline,newbaseline,10))
 if __name__ == '__main__':
     t1 = perf_counter()
     main()
