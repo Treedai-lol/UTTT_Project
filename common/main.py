@@ -54,9 +54,16 @@ def movecomp():
         if board.GameFinished()==1:
             result[1]+=1   
     print(result)
+WINNING = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
+li = []
+for i in WINNING:
+    a=0
+    a+=pow(2,i[0])
+    a+=pow(2,i[1])
+    a+=pow(2,i[2])
+    li.append(a)
 def main():
-    for i in range(10):
-        print(getbf(i))
+    print(li)
         
 if __name__ == '__main__':
     t1 = perf_counter()
