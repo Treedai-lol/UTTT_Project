@@ -9,13 +9,13 @@ class BitBoard:
                 self.o|=(1<<i)
             elif raw[i]==2:
                 self.x|=(1<<i)
-    def seto(self,ind):
-        self.o|=(1<<ind)
+    def seto(self,move):
+        self.o|=move
+    def setx(self,move):
+        self.x|=move
     def clear(self,ind):
         self.o&= ~(1<<ind)
         self.x&= ~(1<<ind)
-    def setx(self,ind):
-        self.x|=(1<<ind)
     def getpiece(self,ind):
         if self.o&(1<<ind):
             return 1
@@ -61,12 +61,26 @@ class BitBoard:
                 return 1
         return 0
     def getmoves(self,sb):
-        mask = ((1<<(sb+1)*9)-1)^((1<<sb*9)-1)
+        if sb==9:   
+            mask = (1<<81)-1
+        else:
+            mask = ((1<<(sb+1)*9)-1)^((1<<sb*9)-1)
         haspiece = self.o|self.x
         return mask&~haspiece
+def GetIndex(bb):
+    indexes = []
+    while bb:
+        lsb = bb&-bb
+        indexes.append(lsb)
+        bb &= bb-1
+    return indexes
+def Popmove(bb):
+    ret = bb&-bb
+    bb&=bb-1
+    return ret
 def main():
-    raw =  [0,1,0,0,2,1,1,2,1,
-                0,0,0,0,0,0,1,1,1,
+    raw =  [0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0,
@@ -75,6 +89,6 @@ def main():
                 0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0]
     bb = BitBoard(raw)
-    print(bb.getmoves(0))
+    print(GetIndex(bb.getmoves(9)))
 if __name__ == '__main__':
     main()

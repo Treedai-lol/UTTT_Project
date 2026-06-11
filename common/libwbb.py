@@ -36,17 +36,17 @@ class Board():
         print("Player: "+str(self.player))
     def MakeMove(self,move:int) ->None: #merged with BoardFinished
         o = self.player
+        ind = move.bit_length()-1
         if o==1:
             self.bs.seto(move)
         else:
             self.bs.setx(move)
-        if self.wonboards[move%9] != 0:
+        if self.wonboards[ind%9] != 0:
             self.sb = 9
         else:
-            self.sb = move%9
-        index = floor(move/9)
-        wonsmallboard = False
-        if self.wonboards[index]==0 and self.bs.iswon(index):
+            self.sb = ind%9
+        index = floor(ind/9)
+        if self.wonboards[index]==0 and self.bs.iswon(index,self.player):
             self.wonboards[index] = o
         elif self.bs.isdraw(index):
             self.wonboards[index] = 3
@@ -84,18 +84,8 @@ class Board():
         if output==0 and self.GetMoves()==[]:
             output = 3
         return output
-    def GetMoves(self) ->list:
-        movelist = []
-        if self.sb != 9:
-            for i in range(0,9):
-                if self.bs[self.sb*9+i] == 0:
-                    movelist.append(self.sb*9+i)
-        else:
-            for i in range(0,9):
-                for j in range(0,9):
-                    if self.bs[i*9+j] == 0:
-                        movelist.append(i*9+j)
-        return movelist
+    def GetMoves(self) ->int:
+        return self.bs.getmoves(self.sb)
 def BoardInit(flavor=0) ->Board:
     if flavor==0:
         raw =  [0,0,0,0,0,0,0,0,0,
