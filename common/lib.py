@@ -22,11 +22,21 @@ class Board():
         ret.append(self.player)
         return ret
     def copy(self):
-        raw = self.OutputList()
-        new = []
-        for i in range(92):
-            new.append(raw[i])
-        return Board(new)
+        new = object.__new__(Board)
+        bb = object.__new__(BitBoard)
+        bb.o = self.bs.o
+        bb.x = self.bs.x
+        new.bs = bb
+
+        wb = object.__new__(SmallBoard)
+        wb.o = self.wonboards.o
+        wb.x = self.wonboards.x
+        wb.d = self.wonboards.d
+        new.wonboards = wb
+
+        new.sb = self.sb
+        new.player = self.player
+        return new
     def PrintBoard(self)->None: #print board function
         self.bs.printbitboard()
         self.wonboards.printbitboard()
@@ -121,9 +131,9 @@ def BoardInit(flavor=0) ->Board:
     return board
 def main():
     board = BoardInit()
+    nb = board.copy()
+    nb.MakeMove(1)
     board.PrintBoard()
-    board.MakeMove(4)
-    board.PrintBoard()
-    print(board.GameFinished())
+    nb.PrintBoard()
 if __name__ == '__main__':
     main()

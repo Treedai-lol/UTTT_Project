@@ -4,7 +4,6 @@ import random
 from time import perf_counter
 from lib import Board
 from lib import BoardInit
-from bitboard import GetIndex
 # For MCTS: 0 stands for not yet determined, 1 is o win, 2 is x win, 3 is draw
 # For the backpropogation, 0.5 is a draw and 1 is o win, 0 is x win
 
@@ -109,8 +108,11 @@ def mcts_search(root_board = BoardInit(), time=1):
     return best.move
 def ChooseRolloutMove(moves:int,type=0)->int:
     if type==0:
-        tmp = GetIndex(moves)
-        return (random.choice(tmp))
+        total = moves.bit_count()
+        target = random.randint(1,total)
+        for i in range(target-1):
+            moves&=moves-1
+        return moves&-moves
     weight = []
     for i in moves:
         if i%9==4: #center
@@ -122,7 +124,8 @@ def ChooseRolloutMove(moves:int,type=0)->int:
     return random.choices(moves,weights=weight)[0]
 
 def main():
-    #print(mcts_search().bit_length()-1)
+    board = BoardInit()
+    #print(mcts_search(board,1).bit_length()-1)
     cProfile.run('mcts_search()',None,'tottime')
 if __name__ == '__main__':
     t1 = perf_counter()
