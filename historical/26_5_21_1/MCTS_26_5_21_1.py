@@ -1,14 +1,8 @@
-import sys
-from pathlib import Path
-
-root_dir = Path(__file__).resolve().parent.parent
-sys.path.append(str(root_dir))
-
 import math
 import random
 from time import perf_counter
-from common.lib import Board
-from common.lib import BoardInit
+from lib import Board
+from lib import BoardInit
 # For MCTS: 0 stands for not yet determined, 1 is o win, 2 is x win, 3 is draw
 # For the backpropogation, 0.5 is a draw and 1 is o win, 0 is x win
 

@@ -1,6 +1,7 @@
 from lib import BoardInit
 from lib import Board
 import random
+import math
 from time import perf_counter
 e = 0
 nld = 0
@@ -54,17 +55,8 @@ def movecomp():
         if board.GameFinished()==1:
             result[1]+=1   
     print(result)
-WINNING = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
-li = []
-for i in WINNING:
-    a=0
-    a+=pow(2,i[0])
-    a+=pow(2,i[1])
-    a+=pow(2,i[2])
-    li.append(a)
 def main():
-    print(li)
-        
+       print(math.floor(0/9))
 if __name__ == '__main__':
     t1 = perf_counter()
     main()

@@ -4,6 +4,7 @@ import random
 from time import perf_counter
 from lib import Board
 from lib import BoardInit
+from bitboard import GetIndex
 # For MCTS: 0 stands for not yet determined, 1 is o win, 2 is x win, 3 is draw
 # For the backpropogation, 0.5 is a draw and 1 is o win, 0 is x win
 
@@ -15,7 +16,7 @@ class MCTSNode():
         self.board = board
         self.parent = parent
         self.move = move
-        self.player = player # 1 FOR O, 2 FOR X
+        self.player = player
         self.children = []
         self.visits = 0.0
         self.wins = 0.0
@@ -23,16 +24,17 @@ class MCTSNode():
     
     def getinfo(self):
         for i in self.children:
-            print(i.move,end=" ")
+            print(i.move.bit_length()-1,end=" ")
             print(i.visits,end=" ")
             print(i.wins)
         print(self.visits)
         print(self.wins)
     def is_fully_expanded(self):
-        return len(self.untried_moves) == 0
+        return self.untried_moves == 0
     
     def expand(self):
-        move = self.untried_moves.pop()
+        move = self.untried_moves&-self.untried_moves
+        self.untried_moves&=self.untried_moves-1
         new_board = self.board.copy()
         new_board.MakeMove(move)
 
@@ -59,7 +61,7 @@ class MCTSNode():
         board = self.board.copy()
         while True:
             moves = board.GetMoves()
-            if moves==[]:
+            if moves==0:
                 return 0.5
             move = ChooseRolloutMove(moves,0)
             board.MakeMove(move)
@@ -105,9 +107,10 @@ def mcts_search(root_board = BoardInit(), time=1):
     best = max(root.children, key=lambda c: c.visits)
     root.getinfo()
     return best.move
-def ChooseRolloutMove(moves:list,type=0)->int:
+def ChooseRolloutMove(moves:int,type=0)->int:
     if type==0:
-        return random.choice(moves)
+        tmp = GetIndex(moves)
+        return (random.choice(tmp))
     weight = []
     for i in moves:
         if i%9==4: #center
@@ -119,9 +122,8 @@ def ChooseRolloutMove(moves:list,type=0)->int:
     return random.choices(moves,weights=weight)[0]
 
 def main():
-    board = BoardInit()
-    print(mcts_search())
-    #cProfile.run('mcts_search()')
+    #print(mcts_search().bit_length()-1)
+    cProfile.run('mcts_search()',None,'tottime')
 if __name__ == '__main__':
     t1 = perf_counter()
     main()
