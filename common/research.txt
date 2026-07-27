@@ -23,6 +23,8 @@
         This version of UTTT is different to the one I'm analysing, notably, a player can only freely play when the board he was 
         sent to is full, as opposed to just being won, in my example.
     -End-
+
+    https://www.sciencedirect.com/science/article/pii/S0304397516302717
     
 ---------------
 --to do list--

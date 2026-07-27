@@ -9,18 +9,18 @@ from bitboard import BitBoard
 from bitboard import SmallBoard
 class Board():
     def __init__(self, raw: list)->None:
-        assert(len(raw)==92)
+        #assert(len(raw)==92)
         self.bs = BitBoard(raw[0:81])
         self.wonboards = SmallBoard(raw[81:90])
         self.sb = raw[90]
         self.player = raw[91]
-    def OutputList(self)->list:
+    """def OutputList(self)->list:
         ret = []
         ret.extend(self.bs.outputlist())
         ret.extend(self.wonboards.outputlist())
         ret.append(self.sb)
         ret.append(self.player)
-        return ret
+        return ret"""
     def copy(self):
         new = object.__new__(Board)
         bb = object.__new__(BitBoard)

@@ -1,21 +1,21 @@
 from lib import Board
 from lib import BoardInit
 import random
-def RandomEval(board:Board) ->list:
+#Eval functions return a value from -1 to 1, with -100 and 100 meaning game over. positive is good for O
+def RandomEval(board:Board) -> float:
     return random.choice(board.GetMoves())
 def NaiveEval(board:Board,o:bool) ->int:
-    temp = 0
-    wb = board.wonboards
-    if o:
-        for i in wb:
-            if i == 1:
-                temp = temp+1
-            if i == 2:
-                temp = temp-1
-    else:
-        for i in wb:
-            if i == 1:
-                temp = temp-1
-            if i == 2:
-                temp = temp+1
-    return temp
+    r = board.GameFinished()
+    if r==1:
+        return 100
+    if r==2:
+        return -100
+    if r==3:
+        return 0
+    
+
+def main():
+    b = BoardInit()
+    
+if __name__== '__main__':
+    main()

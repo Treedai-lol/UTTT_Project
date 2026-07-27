@@ -65,6 +65,13 @@ class BitBoard:
             mask = ((1<<(sb+1)*9)-1)^((1<<sb*9)-1)
         haspiece = self.o|self.x
         return mask&~haspiece
+    def getsb(self,sb,player)->int:
+        mask = ((1<<(sb+1)*9)-1)^((1<<sb*9)-1)
+        if player==1:
+            tmp = mask&self.o
+        elif player==2:
+            tmp = mask&self.x
+        return tmp>>(sb*9)
 class SmallBoard:
     def __init__(self,raw:list)->None: #takes in a 3x3 board and converts it to a bitboard
         self.o = 0
@@ -137,17 +144,17 @@ def Popmove(bb):
     bb&=bb-1
     return ret
 def main():
-    raw = [1,1,1,1,0,0,0,0,0,
+    raw = [1,1,1,0,0,0,0,0,0,
             0,0,0,0,0,0,0,0,0,
-            0,0,0,0,0,0,0,0,0,
+            1,1,1,0,0,0,0,0,0,
             0,0,0,0,0,0,0,0,0,
             0,0,0,0,0,0,0,0,0,
             0,0,0,0,0,0,0,0,0,
             0,0,0,0,0,0,0,0,0,
             0,0,0,0,0,0,0,0,0,
             0,0,0,0,0,0,0,0,0]
-    sb = SmallBoard([1,1,1,2,2,1,2,1,2])
+    sb = SmallBoard([0,0,0,0,0,0,0,0,0])
     bb = BitBoard(raw)
-    bb.printbitboard()
+    print(bb.getsb(2,1))
 if __name__ == '__main__':
     main()
