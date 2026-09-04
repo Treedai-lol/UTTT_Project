@@ -75,7 +75,7 @@ class MCTSNode():
         self.wins+=winner
         if self.parent:
             self.parent.backpropagate(winner)
-def mcts_search(root_board = BoardInit(), time=1):
+def mcts_search(root_board = BoardInit(), time=0.5):
     t1 = perf_counter()
     t2 = perf_counter()
     if(root_board.player==1):
@@ -105,6 +105,7 @@ def mcts_search(root_board = BoardInit(), time=1):
         t2 = perf_counter()
     best = max(root.children, key=lambda c: c.visits)
     #root.getinfo()
+    print(root.visits)
     return best.move
 def ChooseRolloutMove(moves:int,type=0)->int:
     if type==0:

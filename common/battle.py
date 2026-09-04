@@ -6,12 +6,11 @@ sys.path.append(str(root_dir))
 
 from lib import Board
 from lib import BoardInit
-from eval import RandomEval
 from time import perf_counter
 from MCTS import mcts_search as A
 from MCTScopy import mcts_search as B
 
-def Compare(func1:callable,func2:callable,games:int)->list:
+def Compare(func1:callable,func2:callable,games:int,t1,t2)->list:
     result = [0,0,0]#func1 win, func2 win, draw
     for i in range(games):
         print(i+1)
@@ -19,9 +18,9 @@ def Compare(func1:callable,func2:callable,games:int)->list:
         while True:
             o = board.player
             if o==1:
-                move = func1(board)
+                move = func1(board,time=t1)
             if o==2:
-                move = func2(board)
+                move = func2(board,time=t2)
             board.MakeMove(move)
             g = board.GameFinished()
             if g==1:
@@ -39,9 +38,9 @@ def Compare(func1:callable,func2:callable,games:int)->list:
         while True:
             o = board.player
             if o==1:
-                move = func2(board)
+                move = func2(board,time=t2)
             if o==2:
-                move = func1(board)
+                move = func1(board,time=t1)
             board.MakeMove(move)
             g = board.GameFinished()
             if g==1:
@@ -55,7 +54,7 @@ def Compare(func1:callable,func2:callable,games:int)->list:
                 break
     return result
 def main():
-    print(Compare(A,B,1))
+    print(Compare(A,B,3,1,2))
 if __name__ == '__main__':
     t1 = perf_counter()
     main()
