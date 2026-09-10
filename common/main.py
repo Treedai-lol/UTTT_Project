@@ -6,12 +6,14 @@ from time import perf_counter
 def NumsToBB():
     string = input("gimme")
     out = 0
+    print("[",end='')
     for i in string:
         if i.isdigit():
             out+=(1<<int(i))
         else:
-            print(out)
+            print(out,end=",")
             out = 0
+    print(str(out)+"]")
 def movecomp(k=10000): #compares two moves
     result = [0,0]
     for i in range(k):
@@ -32,7 +34,8 @@ def movecomp(k=10000): #compares two moves
             result[1]+=1   
     print(result)
 def main():
-       NumsToBB()
+       while True:
+            NumsToBB()
 if __name__ == '__main__':
     t1 = perf_counter()
     main()
