@@ -9,6 +9,13 @@ val1 = 100
 val2 = -100
 val3 = 80
 val4 = -80
+#the smoother should take in values from 0 to 2240
+#any value above 280 is worth little
+#TODO:MAKE SMOOTHER NOT HAVE MAGIC NUMBERS!!!
+def ModSig(r:int)->float: #accepts non-negative integers and compresses them into 0 to 1 range
+    if r<280:
+        return 0.9*r/280
+    return (x+17360)
 def Eval(board:Board) ->int:
     r = board.GameFinished()
     if r==1:
@@ -52,8 +59,8 @@ def Eval(board:Board) ->int:
                 x_score[sb]+=val3
                 if (board.bs.o&(bls[i]<<(sb*9)))==(bls[i]<<(sb*9)):
                     x_score[sb]+=val4
-    #for i in boards_to_eval:
-    #    score[i] = 
+    for i in boards_to_eval:
+        score[i] = 
         
     print(o_score)
     print(x_score)
