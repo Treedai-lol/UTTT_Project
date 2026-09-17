@@ -5,7 +5,7 @@ rtlc = [[0,1],[0,3],[0,4],[1,2],[1,4],[2,4],[2,5],[3,4],[3,6],[4,5],[4,6],[4,7],
 rblc = [2,6,8,0,7,6,8,5,0,3,2,1,0,2,8,6]
 rtls = [[0,2],[0,6],[0,8],[1,7],[2,6],[2,8],[3,5],[6,8]]
 rbls = [1,3,4,4,4,5,4,7]
-rwin = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[3,5,7]]
+rwin = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
 win = [7,56,448,73,146,292,273,168]
 tlc=[3,9,17,6,18,20,36,24,72,48,80,144,272,288,192,384]
 blc=[4,64,256,1,128,64,256,32,1,8,4,2,1,4,256,64]
@@ -19,7 +19,7 @@ val4 = -100
 #any value above 280 is worth little
 #TODO:MAKE SMOOTHER NOT HAVE MAGIC NUMBERS!!!
 def MagicalFlatten(r:int)->float:
-    if r==0:
+    if r<=0:
         return 0
     if r==100:
         return 0.5
@@ -50,13 +50,13 @@ def Eval(board:Board) ->int:
     boards_to_eval = [0,1,2,3,4,5,6,7,8]
     for i in range(9):
         if (board.wonboards.o)&(1<<i)==(1<<i):
-            boards_to_eval.pop(i)
+            boards_to_eval.remove(i)
             o_score[i] = 1
         if (board.wonboards.x)&(1<<i)==(1<<i):
-            boards_to_eval.pop(i)
+            boards_to_eval.remove(i)
             x_score[i] = 1
         if (board.wonboards.d)&(1<<i)==(1<<i):
-            boards_to_eval.pop(i)
+            boards_to_eval.remove(i)
 
     for sb in boards_to_eval:
         for i in range(len(tlc)):
@@ -83,10 +83,13 @@ def Eval(board:Board) ->int:
     for i in boards_to_eval:
         o_score[i] = MagicalFlatten(o_score[i])
         x_score[i] = MagicalFlatten(x_score[i])
-    for i in range(len(win)):
-        
+    for i in rwin:
+        o_eval+=(o_score[i[0]]*o_score[i[1]]*o_score[i[2]])
+        x_eval+=(x_score[i[0]]*x_score[i[1]]*x_score[i[2]])
     print(o_score)
     print(x_score)
+    print(o_eval)
+    print(x_eval)
     return 0
 
 def main():

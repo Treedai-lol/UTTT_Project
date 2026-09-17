@@ -43,8 +43,8 @@ class Board():
         print(self.sb,end=" ")
         print(self.player)
     def Info(self)->None:
-        self.PrintBoard()
-        print(self.wonboards)
+        self.bs.printbitboard()
+        self.wonboards.printbitboard()
         print("Board to play in: "+str(self.sb))
         print("Player: "+str(self.player))
     def MakeMove(self,move:int)->None: #Takes in a bitstring!!
@@ -60,7 +60,7 @@ class Board():
                 self.wonboards.seto((1<<index))
             if o==2:
                 self.wonboards.setx((1<<index))
-        elif self.bs.isdraw(index):
+        elif self.wonboards.getpiece(index)==0 and self.bs.isdraw(index):
             self.wonboards.setd((1<<index))
         if self.wonboards.getpiece(ind%9)!=0:
             self.sb = 9
@@ -116,9 +116,9 @@ def BoardInit(flavor=0) ->Board:
                 0,0,0,0,0,0,0,0,0]
         extra = [1,1,0,1,0,1,2,2,2,9,1]
     if flavor==3:
-        raw =  [0,1,1,
-                0,0,1,
-                0,0,0,
+        raw =  [1,2,1,
+                1,2,0,
+                2,1,1,
                 0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0,

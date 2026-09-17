@@ -3,6 +3,7 @@ from lib import Board
 import random
 import math
 from time import perf_counter
+from eval import Eval
 def NumsToBB():
     string = input("gimme")
     out = 0
@@ -33,9 +34,32 @@ def movecomp(k=10000): #compares two moves
         if board.GameFinished()==1:
             result[1]+=1   
     print(result)
+def PlayWithSelf():
+    board = BoardInit()
+    while not board.GameFinished():
+        board.PrintBoard()
+        move = input("enter the boardsquare combo")
+        #tmp = math.floor(float(move)/10)*9
+        tmp+=int(move)%10
+        print(tmp)
+        board.MakeMove((1<<tmp))
+    print(board.GameFinished)
+def RandomPlay():
+    board = BoardInit()
+    while not board.GameFinished():
+        print("Info:")
+        board.Info()
+        print("Eval:")
+        Eval(board)
+        moves = board.GetMoves()
+        indices = [i for i in range(moves.bit_length()) if (moves >> i) & 1]
+        index = random.choice(indices)
+        board.MakeMove((1<<index))
+        #print('Made Move'+str(index))
+    print(board.GameFinished())
 def main():
-       while True:
-            NumsToBB()
+    for i in range(1):
+        RandomPlay()
 if __name__ == '__main__':
     t1 = perf_counter()
     main()
