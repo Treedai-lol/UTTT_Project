@@ -86,11 +86,12 @@ def Eval(board:Board) ->int:
     for i in rwin:
         o_eval+=(o_score[i[0]]*o_score[i[1]]*o_score[i[2]])
         x_eval+=(x_score[i[0]]*x_score[i[1]]*x_score[i[2]])
-    print(o_score)
-    print(x_score)
-    print(o_eval)
-    print(x_eval)
-    return 0
+    #print(o_score)
+    #print(x_score)
+    #print(o_eval)
+    #print(x_eval)
+    #print(o_eval-x_eval)
+    return (o_eval-x_eval)
 
 def main():
     b = BoardInit(3)

@@ -1,6 +1,7 @@
 from lib import BoardInit
 from lib import Board
 import random
+import statistics
 import math
 from time import perf_counter
 from eval import Eval
@@ -46,20 +47,41 @@ def PlayWithSelf():
     print(board.GameFinished)
 def RandomPlay():
     board = BoardInit()
+    curreval = 0
     while not board.GameFinished():
-        print("Info:")
-        board.Info()
-        print("Eval:")
-        Eval(board)
+        #print("Info:")
+        #board.Info()
+        #print("Eval:")
+        #Eval(board)
+        curreval = Eval(board)
         moves = board.GetMoves()
         indices = [i for i in range(moves.bit_length()) if (moves >> i) & 1]
         index = random.choice(indices)
         board.MakeMove((1<<index))
         #print('Made Move'+str(index))
-    print(board.GameFinished())
+    #print(board.GameFinished())
+    #print(f'{curreval:.2f}')
+    return [board.GameFinished(),curreval]
+def RandomAnalysis(n:int):
+    oeval = []
+    xeval = []
+    deval = []
+    for i in range(n):
+        l = RandomPlay()
+        if(l[0]==1):
+            oeval.append(l[1])
+        if(l[0]==2):
+            xeval.append(l[1])
+        if(l[0]==3):
+            deval.append(l[1])
+    print("average evaluation when o wins:")
+    print(statistics.fmean(oeval))
+    print("average evaluation when x wins:")
+    print(statistics.fmean(xeval))
+    print("average evaluation when d wins:")
+    print(statistics.fmean(deval))
 def main():
-    for i in range(1):
-        RandomPlay()
+    RandomAnalysis(1000)
 if __name__ == '__main__':
     t1 = perf_counter()
     main()
