@@ -19,22 +19,18 @@ val4 = -100
 #any value above 280 is worth little
 #TODO:MAKE SMOOTHER NOT HAVE MAGIC NUMBERS!!!
 def MagicalFlatten(r:int)->float:
-    if r<=0:
+    if r<0:
         return 0
-    if r==100:
+    if r==0:
         return 0.5
+    if r==100:
+        return 0.75
     if r==200:
-        return 0.8
+        return 0.83
     if r==300:
-        return 0.85
-    if r==400:
         return 0.88
-    if r>=500:
+    if r>=400:
         return 0.9
-def ModSig(r:int)->float: #accepts non-negative integers and compresses them into 0 to 1 range
-    if r<280:
-        return 0.9*r/280
-    return (r+17360)/2240
 def Eval(board:Board) ->int:
     r = board.GameFinished()
     if r==1:
@@ -95,7 +91,7 @@ def Eval(board:Board) ->int:
 
 def main():
     b = BoardInit(3)
-    Eval(b)
+    print(Eval(b))
     
 if __name__== '__main__':
     main()

@@ -71,6 +71,7 @@ class Board():
             self.player = 2
         else:
             self.player = 1
+        return self
     def GameFinished(self) ->int: #returns 0,1,2,3
         if self.wonboards.iswon(1):
             return 1
@@ -116,10 +117,10 @@ def BoardInit(flavor=0) ->Board:
                 0,0,0,0,0,0,0,0,0]
         extra = [1,1,0,1,0,1,2,2,2,9,1]
     if flavor==3:
-        raw =  [1,2,1,
-                1,2,0,
-                2,1,1,
-                0,0,0,0,0,0,0,0,0,
+        raw =  [1,0,1,
+                0,0,0,
+                0,0,0,
+                2,2,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0,
@@ -127,7 +128,7 @@ def BoardInit(flavor=0) ->Board:
                 0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0]
-        extra = [0,0,0,0,0,0,0,0,0,9,2]
+        extra = [0,0,0,0,0,0,0,0,0,0,1]
     raw.extend(extra)
     board = Board(raw)
     return board
