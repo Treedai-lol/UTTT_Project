@@ -4,24 +4,17 @@
 # [90:91] sb int 0-9
 # [91:92] player 1 o 2 x
 # for move representation: [67] is on floor(67/9)=6 and 67%9=4
+from __future__ import annotations
 from math import floor
 from bitboard import BitBoard
 from bitboard import SmallBoard
 class Board():
     def __init__(self, raw: list)->None:
-        #assert(len(raw)==92)
         self.bs = BitBoard(raw[0:81])
         self.wonboards = SmallBoard(raw[81:90])
         self.sb = raw[90]
         self.player = raw[91]
-    """def OutputList(self)->list:
-        ret = []
-        ret.extend(self.bs.outputlist())
-        ret.extend(self.wonboards.outputlist())
-        ret.append(self.sb)
-        ret.append(self.player)
-        return ret"""
-    def copy(self):
+    def copy(self)->Board:
         new = object.__new__(Board)
         bb = object.__new__(BitBoard)
         bb.o = self.bs.o
@@ -37,17 +30,23 @@ class Board():
         new.sb = self.sb
         new.player = self.player
         return new
-    def PrintBoard(self)->None: #print board function
-        self.bs.printbitboard()
-        self.wonboards.printbitboard()
-        print(self.sb,end=" ")
-        print(self.player)
-    def Info(self)->None:
+    def PrintBoard(self,mode=0)->None: #print board function
+        if mode==0:
+            self.bs.printbitboard()
+            self.wonboards.printbitboard()
+            print(self.sb,end=" ")
+            print(self.player)
+        if mode==1:
+            self.bs.printbitboard()
+            self.wonboards.printbitboard()
+            print(self.sb,end=" ")
+            print(self.player)
+    def Info(self)->None: 
         self.bs.printbitboard()
         self.wonboards.printbitboard()
         print("Board to play in: "+str(self.sb))
         print("Player: "+str(self.player))
-    def MakeMove(self,move:int)->None: #Takes in a bitstring!!
+    def MakeMove(self,move:int)->Board: #Takes in a bitstring!!
         o = self.player
         ind = move.bit_length()-1
         if o==1:
@@ -115,7 +114,7 @@ def BoardInit(flavor=0) ->Board:
                 0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0]
-        extra = [1,1,0,1,0,1,2,2,2,9,1]
+        extra = [0,0,0,0,0,0,0,0,0,4,1]
     if flavor==3:
         raw =  [1,0,1,
                 0,0,0,
@@ -134,9 +133,11 @@ def BoardInit(flavor=0) ->Board:
     return board
 def main():
     board = BoardInit()
-    nb = board.copy()
-    nb.MakeMove(1)
+    for i in [1,2,4,8]:
+        nb = board.copy()
+        nb.MakeMove(i)
+        nb.PrintBoard()
     board.PrintBoard()
-    nb.PrintBoard()
+    
 if __name__ == '__main__':
     main()

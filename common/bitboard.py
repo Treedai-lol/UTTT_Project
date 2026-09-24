@@ -132,14 +132,14 @@ class SmallBoard:
                 return 1
         return 0
 
-def GetIndex(bb)->list:
+def GetIndex(bb)->list: #turns 7 into [0,1,2]
     indexes = []
     while bb:
         lsb = bb&-bb
         indexes.append(lsb)
         bb &= bb-1
     return indexes
-def Popmove(bb):
+def Popmove(bb): #TODO: remove this
     ret = bb&-bb
     bb&=bb-1
     return ret

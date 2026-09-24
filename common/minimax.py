@@ -36,7 +36,27 @@ def alphaBetaMin(board: Board,alpha,beta,depthleft):
             return score   #fail soft alpha-cutoff
     return bestValue
 def main():
-    board = BoardInit(3)
-    print(alphaBetaMax(board,-INF,INF,8))
+    board = BoardInit()
+    while not board.GameFinished():
+        moves = board.GetMoves()
+        board.PrintBoard()
+        if board.player==1:
+            move_eval = [-1,-1000]
+        if board.player==2:
+            move_eval = [-1,1000]
+        while moves!=0:
+            move = moves&-moves
+            moves&=moves-1
+            nb = board.copy()
+            if(board.player==1):
+                ev = alphaBetaMax(nb.MakeMove(move),-INF,INF,5)
+                if ev>move_eval[1]:
+                    move_eval = [move,ev]
+            if(board.player==2):
+                ev = alphaBetaMin(nb.MakeMove(move),-INF,INF,5)
+                if ev<move_eval[1]:
+                    move_eval = [move,ev]
+        board.MakeMove(move_eval[0])
+        print(Eval(board))
 if __name__=='__main__':
     main()

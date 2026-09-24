@@ -1,36 +1,10 @@
 from lib import Board
 from lib import BoardInit
 #Eval functions return a value from -1 to 1, with -100 and 100 meaning game over. positive is good for O
-rtlc = [[0,1],[0,3],[0,4],[1,2],[1,4],[2,4],[2,5],[3,4],[3,6],[4,5],[4,6],[4,7],[4,8],[5,8],[6,7],[7,8]]
-rblc = [2,6,8,0,7,6,8,5,0,3,2,1,0,2,8,6]
-rtls = [[0,2],[0,6],[0,8],[1,7],[2,6],[2,8],[3,5],[6,8]]
-rbls = [1,3,4,4,4,5,4,7]
-rwin = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
-win = [7,56,448,73,146,292,273,168]
-tlc=[3,9,17,6,18,20,36,24,72,48,80,144,272,288,192,384]
-blc=[4,64,256,1,128,64,256,32,1,8,4,2,1,4,256,64]
-tls=[5,65,257,130,68,260,40,320]
-bls=[2,8,16,16,16,32,16,128]
-val1 = 100
-val2 = -100
-val3 = 100
-val4 = -100
 #the smoother should take in values from 0 to 2240
 #any value above 280 is worth little
 #TODO:MAKE SMOOTHER NOT HAVE MAGIC NUMBERS!!!
-def MagicalFlatten(r:int)->float:
-    if r<0:
-        return 0
-    if r==0:
-        return 0.5
-    if r==100:
-        return 0.75
-    if r==200:
-        return 0.83
-    if r==300:
-        return 0.88
-    if r>=400:
-        return 0.9
+def Simpler
 def Eval(board:Board) ->int:
     r = board.GameFinished()
     if r==1:
@@ -89,13 +63,39 @@ def Eval(board:Board) ->int:
     #print(o_eval-x_eval)
     return (o_eval-x_eval)
 
+def MagicalFlatten(r:int)->float:
+    if r<0:
+        return 0
+    if r==0:
+        return 0.5
+    if r==100:
+        return 0.75
+    if r==200:
+        return 0.83
+    if r==300:
+        return 0.88
+    if r>=400:
+        return 0.9
 def main():
     b = BoardInit(3)
     print(Eval(b))
     
 if __name__== '__main__':
     main()
-
+rtlc = [[0,1],[0,3],[0,4],[1,2],[1,4],[2,4],[2,5],[3,4],[3,6],[4,5],[4,6],[4,7],[4,8],[5,8],[6,7],[7,8]]
+rblc = [2,6,8,0,7,6,8,5,0,3,2,1,0,2,8,6]
+rtls = [[0,2],[0,6],[0,8],[1,7],[2,6],[2,8],[3,5],[6,8]]
+rbls = [1,3,4,4,4,5,4,7]
+rwin = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
+win = [7,56,448,73,146,292,273,168]
+tlc=[3,9,17,6,18,20,36,24,72,48,80,144,272,288,192,384]
+blc=[4,64,256,1,128,64,256,32,1,8,4,2,1,4,256,64]
+tls=[5,65,257,130,68,260,40,320]
+bls=[2,8,16,16,16,32,16,128]
+val1 = 100
+val2 = -100
+val3 = 100
+val4 = -100
 """
 two in a line(continuous, no potential)
 13/15/37/57
