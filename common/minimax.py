@@ -2,6 +2,8 @@ from eval import Eval
 import lib
 from lib import Board
 from lib import BoardInit
+from bitboard import GetIndex
+import random
 INF = 1000000
 def alphaBetaMax(board: Board,alpha,beta,depthleft):
     if depthleft==0:
@@ -35,6 +37,14 @@ def alphaBetaMin(board: Board,alpha,beta,depthleft):
         if score<=alpha:
             return score   #fail soft alpha-cutoff
     return bestValue
+
+def RandomMover(board:Board,time:int):
+    moves = board.GetMoves()
+    total = moves.bit_count()
+    target = random.randint(1,total)
+    for i in range(target-1):
+        moves&=moves-1
+    return moves&-moves
 def main():
     board = BoardInit()
     while not board.GameFinished():

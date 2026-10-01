@@ -4,7 +4,6 @@ from lib import BoardInit
 #the smoother should take in values from 0 to 2240
 #any value above 280 is worth little
 #TODO:MAKE SMOOTHER NOT HAVE MAGIC NUMBERS!!!
-def Simpler
 def Eval(board:Board) ->int:
     r = board.GameFinished()
     if r==1:

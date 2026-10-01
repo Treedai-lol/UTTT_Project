@@ -105,7 +105,7 @@ def mcts_search(root_board = BoardInit(), time=0.5):
         t2 = perf_counter()
     best = max(root.children, key=lambda c: c.visits)
     #root.getinfo()
-    print(root.visits)
+    #print(root.visits)
     return best.move
 def ChooseRolloutMove(moves:int,type=0)->int:
     if type==0:
