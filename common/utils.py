@@ -5,6 +5,36 @@ import statistics
 import math
 from time import perf_counter
 from eval import Eval
+def NumsToBB():
+    string = input("gimme")
+    out = 0
+    print("[",end='')
+    for i in string:
+        if i.isdigit():
+            out+=(1<<int(i))
+        else:
+            print(out,end=",")
+            out = 0
+    print(str(out)+"]")
+def movecomp(k=10000): #compares two moves
+    result = [0,0]
+    for i in range(k):
+        board = BoardInit()
+        board.MakeMove(40) #move 1
+        while board.GameFinished()==0:
+            move = random.choice(board.GetMoves())
+            board.MakeMove(move)
+        if board.GameFinished()==1:
+            result[0]+=1
+    for i in range(k):
+        board = BoardInit()
+        board.MakeMove(39) #move 2
+        while board.GameFinished()==0:
+            move = random.choice(board.GetMoves())
+            board.MakeMove(move)
+        if board.GameFinished()==1:
+            result[1]+=1   
+    print(result)
 def PlayWithSelf():
     board = BoardInit()
     while not board.GameFinished():
@@ -15,24 +45,23 @@ def PlayWithSelf():
         print(tmp)
         board.MakeMove((1<<tmp))
     print(board.GameFinished)
-def RandomPlay(mode=0):
+def RandomPlay():
     board = BoardInit()
     curreval = 0
     while not board.GameFinished():
-        if mode==1:
-            print("Info:")
-            board.Info()
-            print("Eval:")
-            print(Eval(board))
+        #print("Info:")
+        #board.Info()
+        #print("Eval:")
+        #Eval(board)
         curreval = Eval(board)
         moves = board.GetMoves()
         indices = [i for i in range(moves.bit_length()) if (moves >> i) & 1]
         index = random.choice(indices)
         board.MakeMove((1<<index))
-        if mode==1:
-            print('Made Move'+str(index))
-    print("won by:",end='')
-    print(board.GameFinished())
+        #print(curreval)
+        #print('Made Move'+str(index))
+    #print(board.GameFinished())
+    #print(f'{curreval:.2f}')
     return [board.GameFinished(),curreval]
 def PlayEvalMove():
     board = BoardInit( )

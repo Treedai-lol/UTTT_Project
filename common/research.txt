@@ -25,13 +25,13 @@
     -End-
 
     https://www.sciencedirect.com/science/article/pii/S0304397516302717
-    
+    https://www.researchgate.net/publication/360376264_Ultimate_Tic-Tac-Toe_Bot_Techniques/
 ---------------
 --to do list--
 1.develop a heuristic evaluation algorithm to help the MCTS
-2.compute the branching factor of UTTT
+2.
 3.make an endgame solver
-4.use a bitboard to represent the UTTT board
+4.
 5.use suragnair's AlphaZeroGeneral to implement an engine
 
 --coding notes--
