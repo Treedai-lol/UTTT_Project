@@ -33,7 +33,7 @@ class Board():
     def PrintBoard(self,mode=0)->None: #print board function
         if mode==0:
             self.bs.printbitboard()
-            self.wonboards.printbitboard()
+            ##self.wonboards.printbitboard()
             print(self.sb,end=" ")
             print(self.player)
         if mode==1:
@@ -80,7 +80,20 @@ class Board():
             return 3
         return 0
     def GetMoves(self) ->int:
-        return self.bs.getmoves(self.sb)
+        if sb!=9:
+            return self.bs.getmoves(self.sb)
+        for i in range(9):
+            if self.wonboards&(1<<i)!=(1<<i):
+                
+        wonsqs = 
+        
+def GetIndex(bb)->list: #turns 7 into [0,1,2]
+    indexes = []
+    while bb:
+        lsb = bb&-bb
+        indexes.append(lsb.bit_length())
+        bb &= bb-1
+    return indexes
 def BoardInit(flavor=0) ->Board:
     if flavor==0:
         raw =  [0,0,0,0,0,0,0,0,0,
@@ -94,8 +107,8 @@ def BoardInit(flavor=0) ->Board:
                 0,0,0,0,0,0,0,0,0]
         extra = [0,0,0,0,0,0,0,0,0,9,1]
     if flavor==1:
-        raw =  [1,1,1,1,1,1,1,1,1,
-                2,2,2,2,2,2,2,2,2,
+        raw =  [1,1,1,0,0,0,0,0,0,
+                2,2,2,0,0,0,0,0,0,
                 1,1,1,1,1,1,1,1,1,
                 2,2,2,2,2,2,2,2,2,
                 0,0,0,0,0,0,0,0,0,
@@ -103,7 +116,7 @@ def BoardInit(flavor=0) ->Board:
                 1,1,1,1,1,1,1,1,1,
                 2,2,2,2,2,2,2,2,2,
                 1,1,1,1,1,1,1,1,1]
-        extra = [1,2,1,2,0,2,1,2,1,4,1]
+        extra = [1,2,1,2,0,2,1,2,1,9,1]
     if flavor==2:
         raw =  [0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0,
@@ -132,12 +145,9 @@ def BoardInit(flavor=0) ->Board:
     board = Board(raw)
     return board
 def main():
-    board = BoardInit()
-    for i in [1,2,4,8]:
-        nb = board.copy()
-        nb.MakeMove(i)
-        nb.PrintBoard()
+    board = BoardInit(1)
     board.PrintBoard()
+    print(GetIndex(board.GetMoves()))
     
 if __name__ == '__main__':
     main()

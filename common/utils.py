@@ -1,8 +1,7 @@
-from lib import BoardInit
-from lib import Board
+#from lib import BoardInit
 import random
 import statistics
-import math
+import maths
 from time import perf_counter
 from eval import Eval
 def NumsToBB():
@@ -104,9 +103,15 @@ def RandomAnalysis(n:int):
     print(statistics.fmean(xeval))
     print("average evaluation when d wins:")
     print(statistics.fmean(deval))
+def GetIndex(bb)->list: #turns 7 into [0,1,2]
+    indexes = []
+    while bb:
+        lsb = bb&-bb
+        indexes.append(lsb.bit_length())
+        bb &= bb-1
+    return indexes
 def main():
-    #RandomAnalysis(1000)
-    PlayEvalMove()
+    print(BBToNums(7))
 if __name__ == '__main__':
     t1 = perf_counter()
     main()

@@ -91,12 +91,15 @@ def CsvInit():
     df = pd.DataFrame(data)
     df.to_csv(r'common\results.csv', index=False)
 def main():
+    i = 0
     while True:
-        MakeData(A,B,1,0.001,0.001)
-        MakeData(A,B,1,0.002,0.002)
-        MakeData(A,B,1,0.004,0.004)
-        MakeData(A,B,1,0.008,0.008)
-        MakeData(A,B,1,0.016,0.016)
+        print(i)
+        i+=1
+        alltimes = [0.001,0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.024]
+        for i in alltimes:
+            for j in alltimes:
+                if(i>=j)&(i<5*j):
+                    MakeData(A,B,1,i,j)
 if __name__ == '__main__':
     t1 = perf_counter()
     main()
