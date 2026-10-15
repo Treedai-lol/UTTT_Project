@@ -58,11 +58,8 @@ class BitBoard:
             if(tmp&(pat<<sb*9)==(pat<<sb*9)):
                 return 1
         return 0
-    def getmoves(self,sb)->int:
-        if sb==9:   
-            mask = (1<<81)-1
-        else:
-            mask = ((1<<(sb+1)*9)-1)^((1<<sb*9)-1)
+    def getmoves(self,sb)->int: #sb!=9!!!
+        mask = ((1<<(sb+1)*9)-1)^((1<<sb*9)-1)
         haspiece = self.o|self.x
         return mask&~haspiece
     def getsb(self,sb,player)->int:

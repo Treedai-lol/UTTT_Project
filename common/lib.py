@@ -80,12 +80,13 @@ class Board():
             return 3
         return 0
     def GetMoves(self) ->int:
-        if sb!=9:
+        if self.sb!=9:
             return self.bs.getmoves(self.sb)
+        moves = 0
         for i in range(9):
-            if self.wonboards&(1<<i)!=(1<<i):
-                
-        wonsqs = 
+            if (self.wonboards.o^self.wonboards.x)&(1<<i)!=(1<<i):
+                moves^=(self.bs.getmoves(i))
+        return moves
         
 def GetIndex(bb)->list: #turns 7 into [0,1,2]
     indexes = []
