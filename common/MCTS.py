@@ -126,8 +126,8 @@ def ChooseRolloutMove(moves:int,type=0)->int:
 
 def main():
     board = BoardInit()
-    #print(mcts_search(board,1).bit_length()-1)
-    cProfile.run('mcts_search()',None,'tottime')
+    print(mcts_search(board,1).bit_length()-1)
+    #cProfile.run('mcts_search()',None,'tottime')
 if __name__ == '__main__':
     t1 = perf_counter()
     main()

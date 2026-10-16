@@ -2,6 +2,7 @@ import tkinter as tk
 import math
 from lib import BoardInit, Board
 from MCTS import mcts_search
+import utils
 
 # Global board state
 board = BoardInit()
@@ -12,17 +13,11 @@ PLAYER_SYMBOLS = {
     2: ("O", "#e74c3c" , "#ffffff")
 }
 
-def bitmask_to_index(bitmask):
-    """Converts bitmask move (e.g. 1 << 5) back to button index integer (5)."""
-    if bitmask <= 0:
-        return -1
-    return int(math.log2(bitmask))
-
 def update_button_ui(button_index, player):
     """Updates the target button's text, color, and disables it."""
     if button_index in buttons:
         btn = buttons[button_index]
-        symbol, fg_color, bg_color = PLAYER_SYMBOLS.get(player, ("X", "red", "white"))
+        symbol, fg_color, bg_color = PLAYER_SYMBOLS.get(player, ("sym", "fg", "bg"))
         btn.config(
             text=symbol,
             fg=fg_color,
@@ -42,9 +37,8 @@ def process_turn(human_move=None):
     # 1. Handle Human Move
     if human_move is not None and board.player != 1:
         current_player = board.player
-        move_bit = 1 << human_move
         
-        board.MakeMove(move_bit)
+        board.MakeMove(1<<human_move)
         update_button_ui(human_move, current_player)
         board.PrintBoard()
         
@@ -53,7 +47,7 @@ def process_turn(human_move=None):
             return
 
     # 2. Handle MCTS Turn
-    if board.player == 1 and not board.GameFinished():
+    if board.player == 1:
         status_label.config(text="MCTS is thinking...")
         root.update()  # Force GUI refresh before computation
         
@@ -61,7 +55,7 @@ def process_turn(human_move=None):
         mcts_move_bit = mcts_search(board, 1.024)
         
         # Convert bitmask move (1 << index) back to index (0-80)
-        mcts_move_index = bitmask_to_index(mcts_move_bit)
+        mcts_move_index = utils.bitmask_to_index(mcts_move_bit)
         
         board.MakeMove(mcts_move_bit)
         if mcts_move_index != -1:

@@ -1,5 +1,4 @@
-from lib import Board
-from lib import BoardInit
+from lib import Board,BoardInit
 #Eval functions return a value from -1 to 1, with -100 and 100 meaning game over. positive is good for O
 #the smoother should take in values from 0 to 2240
 #any value above 280 is worth little

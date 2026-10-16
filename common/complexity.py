@@ -1,7 +1,5 @@
-from lib import BoardInit
-from lib import Board
-import random
-import math
+from lib import BoardInit,Board
+import utils
 from time import perf_counter
 e = 0
 nld = 0

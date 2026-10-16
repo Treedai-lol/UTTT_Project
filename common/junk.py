@@ -1,11 +1,11 @@
-#from lib import BoardInit
+from lib import BoardInit
+from lib import Board
 import random
 import statistics
-import maths
 from time import perf_counter
 from eval import Eval
-def NumsToBB():
-    string = input("gimme")
+def NumsToBitstring():
+    string = input("enter numbers like '124', this function outputs 21")
     out = 0
     print("[",end='')
     for i in string:
@@ -15,7 +15,7 @@ def NumsToBB():
             print(out,end=",")
             out = 0
     print(str(out)+"]")
-def movecomp(k=10000): #compares two moves
+def movecomp(k=10000): #compares two moves randomly
     result = [0,0]
     for i in range(k):
         board = BoardInit()

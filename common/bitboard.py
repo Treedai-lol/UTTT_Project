@@ -1,3 +1,4 @@
+import utils
 foo = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
 WINNING = [7, 56, 448, 73, 146, 292, 273, 84]
 class BitBoard:
@@ -129,17 +130,6 @@ class SmallBoard:
                 return 1
         return 0
 
-def GetIndex(bb)->list: #turns 7 into [0,1,2]
-    indexes = []
-    while bb:
-        lsb = bb&-bb
-        indexes.append(lsb)
-        bb &= bb-1
-    return indexes
-def Popmove(bb): #TODO: remove this
-    ret = bb&-bb
-    bb&=bb-1
-    return ret
 def main():
     raw = [1,1,1,0,0,0,0,0,0,
             0,0,0,0,0,0,0,0,0,

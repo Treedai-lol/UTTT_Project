@@ -1,5 +1,6 @@
 import cProfile
 import math
+import statistics
 import random
 from time import perf_counter
 from lib import Board
@@ -75,7 +76,7 @@ class MCTSNode():
         self.wins+=winner
         if self.parent:
             self.parent.backpropagate(winner)
-def mcts_search(root_board = BoardInit(), time=0.1):
+def mcts_search_with_visits(root_board = BoardInit(), time=1):
     t1 = perf_counter()
     t2 = perf_counter()
     if(root_board.player==1):
@@ -105,8 +106,8 @@ def mcts_search(root_board = BoardInit(), time=0.1):
         t2 = perf_counter()
     best = max(root.children, key=lambda c: c.visits)
     #root.getinfo()
-    #print(root.visits)
-    return best.move
+    print(root.visits)
+    return [best.move,root.visits]
 def ChooseRolloutMove(moves:int,type=0)->int:
     if type==0:
         total = moves.bit_count()
@@ -114,20 +115,14 @@ def ChooseRolloutMove(moves:int,type=0)->int:
         for i in range(target-1):
             moves&=moves-1
         return moves&-moves
-    weight = []
-    for i in moves:
-        if i%9==4: #center
-            weight.append(5)
-        elif i%9==0 or i%9==2 or i%9==6 or i%9==8: #corner
-            weight.append(3)
-        else: #edge
-            weight.append(2)
-    return random.choices(moves,weights=weight)[0]
 
 def main():
     board = BoardInit()
-    #print(mcts_search(board,1).bit_length()-1)
-    cProfile.run('mcts_search()',None,'tottime')
+    arr = []
+    for i in range(10):
+        arr.append(mcts_search_with_visits(board,1)[1])
+    print(f'The Average node searched in 1 second is {statistics.fmean(arr)}')
+    #cProfile.run('mcts_search()',None,'tottime')
 if __name__ == '__main__':
     t1 = perf_counter()
     main()
