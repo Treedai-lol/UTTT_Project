@@ -14,5 +14,6 @@ def RandomMover(board:Board,time:int):
     return moves&-moves
 
 def main():
+    pass
 if __name__=='__main__':
     main()

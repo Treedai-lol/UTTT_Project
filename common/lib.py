@@ -8,6 +8,7 @@ from __future__ import annotations
 from math import floor
 from bitboard import BitBoard
 from bitboard import SmallBoard
+import utils
 class Board():
     def __init__(self, raw: list)->None:
         self.bs = BitBoard(raw[0:81])
@@ -88,13 +89,7 @@ class Board():
                 moves^=(self.bs.getmoves(i))
         return moves
         
-def GetIndex(bb)->list: #turns 7 into [0,1,2]
-    indexes = []
-    while bb:
-        lsb = bb&-bb
-        indexes.append(lsb.bit_length())
-        bb &= bb-1
-    return indexes
+
 def BoardInit(flavor=0) ->Board:
     if flavor==0:
         raw =  [0,0,0,0,0,0,0,0,0,
@@ -130,25 +125,25 @@ def BoardInit(flavor=0) ->Board:
                 0,0,0,0,0,0,0,0,0]
         extra = [0,0,0,0,0,0,0,0,0,4,1]
     if flavor==3:
-        raw =  [1,0,1,
+        raw =  [1,1,1,
                 0,0,0,
                 0,0,0,
+                1,1,1,0,0,0,0,0,0,
+                1,1,0,0,0,0,0,0,0,
+                2,2,0,0,0,0,0,0,0,
+                2,2,0,0,0,0,0,0,0,
+                2,2,0,0,0,0,0,0,0,
                 2,2,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0,
-                0,0,0,0,0,0,0,0,0,
-                0,0,0,0,0,0,0,0,0,
-                0,0,0,0,0,0,0,0,0,
-                0,0,0,0,0,0,0,0,0,
-                0,0,0,0,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,0]
-        extra = [0,0,0,0,0,0,0,0,0,0,1]
+        extra = [1,1,0,0,0,0,0,0,0,9,1]
     raw.extend(extra)
     board = Board(raw)
     return board
 def main():
     board = BoardInit(1)
     board.PrintBoard()
-    print(GetIndex(board.GetMoves()))
+    print(utils.GetIndex(board.GetMoves()))
     
 if __name__ == '__main__':
     main()

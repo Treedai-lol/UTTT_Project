@@ -97,21 +97,17 @@ def RandomAnalysis(n:int):
             xeval.append(l[1])
         if(l[0]==3):
             deval.append(l[1])
-    print("average evaluation when o wins:")
+    print("average evaluation and standard deviation when o wins:")
     print(statistics.fmean(oeval))
-    print("average evaluation when x wins:")
+    print(statistics.stdev(oeval))
+    print("average and standard deviation evaluation when x wins:")
     print(statistics.fmean(xeval))
-    print("average evaluation when d wins:")
+    print(statistics.stdev(xeval))
+    print("average and standard deviation evaluation when d wins:")
     print(statistics.fmean(deval))
-def GetIndex(bb)->list: #turns 7 into [0,1,2]
-    indexes = []
-    while bb:
-        lsb = bb&-bb
-        indexes.append(lsb.bit_length())
-        bb &= bb-1
-    return indexes
+    print(statistics.stdev(deval))
 def main():
-    print(BBToNums(7))
+    RandomAnalysis(5000)
 if __name__ == '__main__':
     t1 = perf_counter()
     main()

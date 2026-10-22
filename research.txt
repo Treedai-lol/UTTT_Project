@@ -93,3 +93,6 @@ The amount of edges, non-leaf nodes, and the calculated average branching factor
         1s: 2552/s
         10s: 2613.3/s
         100s: 2367.21/s
+current:
+    speed:
+        1s: 3253.6/s
