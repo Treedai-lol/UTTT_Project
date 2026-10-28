@@ -69,37 +69,40 @@ def MakeData(func1:callable,func2:callable,games,t1,t2,adj):
     df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"win.perc"] = (w+d/2)/(w+d+l)
     df.to_csv(r'common\results.csv', index=False)
 def CsvInit():
-    alltimes = [0.001,0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.024]
+    alltimes = [0.001,0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.024,2.048,4.096,8.192]
     bot1 = []
     bot2 = []
     zeroes = []
+    tmp = []
     for i in alltimes:
         for j in alltimes:
             if(i>=j):
                 bot1.append(i)
                 bot2.append(j)
                 zeroes.append(0)
+                tmp.append(0.0)
     data = {
     "bot1": bot1,
     "bot2": bot2,
     "wins": zeroes,
     "draws":zeroes,
     "losses":zeroes,
-    "win.perc":zeroes
+    "win.perc":tmp
     }
     df = pd.DataFrame(data)
-    df.to_csv(r'common\tests.csv', index=False)
+    df.to_csv(r'common\results.csv', index=False)
 def main():
+    CsvInit()
     i = 0
     while True:
         print(i)
         i+=1
-        alltimes = [0.001,0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.024]
+        alltimes = [0.001,0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.024,2.048,4.096,8.192]
         adj = 1 #IMPORTANT: how much faster does this computer run than the school laptop?
         #if 4500 nodes/s, then adj = 4500/2250=2
         for i in alltimes:
             for j in alltimes:
-                if(i>=j)&(i<5*j)&(i<0.08):
+                if(i>=j) and (i<5*j) and i>2:
                     MakeData(MCTS,MCTS,1,i,j,adj)
 if __name__ == '__main__':
     t1 = perf_counter()

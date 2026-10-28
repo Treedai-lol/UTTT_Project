@@ -25,7 +25,7 @@ def RandomVSRandom():
     return [board.GameFinished(),curreval]
 
 def main():
-    RandomVSRandom()
+    print("Hello World!")
     pass
 if __name__ == '__main__':
     t1 = perf_counter()

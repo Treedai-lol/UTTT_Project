@@ -107,7 +107,7 @@ def RandomAnalysis(n:int):
     print(statistics.fmean(deval))
     print(statistics.stdev(deval))
 def main():
-    RandomAnalysis(5000)
+    RandomAnalysis(500)
 if __name__ == '__main__':
     t1 = perf_counter()
     main()
