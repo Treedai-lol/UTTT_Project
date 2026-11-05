@@ -56,10 +56,10 @@ def Compare(func1:callable,func2:callable,games:int,t1,t2)->list:
                 result[2]+=1
                 break
     return result
-def MakeData(func1:callable,func2:callable,games,t1,t2,adj):
-    res = Compare(func1,func2,games,t1/adj,t2/adj)
+def MakeData(func1:callable,func2:callable,games,t1,t2):
+    res = Compare(func1,func2,games,t1,t2)
     header = ["bot1","bot2","wins","draws","losses","win.perc"]
-    df = pd.read_csv(r'common\results.csv')
+    df = pd.read_csv('data.csv')
     df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"wins"]+=res[0]
     df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"draws"]+=res[2]
     df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"losses"]+=res[1]
@@ -67,6 +67,11 @@ def MakeData(func1:callable,func2:callable,games,t1,t2,adj):
     d = df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"draws"]
     l = df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"losses"]
     df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"win.perc"] = (w+d/2)/(w+d+l)
+    df.to_csv('data.csv', index=False)
+def updateperc():
+    df = pd.read_csv(r'common\results.csv')
+    df["winperc"] = (df["wins"]+df["draws"]/2)/(df["wins"]+df["draws"]+df["losses"])
+    #df.drop("win.perc",inplace=True,axis=1)
     df.to_csv(r'common\results.csv', index=False)
 def CsvInit():
     alltimes = [0.001,0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.024,2.048,4.096,8.192]
@@ -92,18 +97,15 @@ def CsvInit():
     df = pd.DataFrame(data)
     df.to_csv(r'common\results.csv', index=False)
 def main():
-    CsvInit()
     i = 0
     while True:
         print(i)
         i+=1
         alltimes = [0.001,0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.024,2.048,4.096,8.192]
-        adj = 1 #IMPORTANT: how much faster does this computer run than the school laptop?
-        #if 4500 nodes/s, then adj = 4500/2250=2
         for i in alltimes:
             for j in alltimes:
                 if(i>=j) and (i<5*j) and i>2:
-                    MakeData(MCTS,MCTS,1,i,j,adj)
+                    MakeData(MCTS,MCTS,1,i,j)
 if __name__ == '__main__':
     t1 = perf_counter()
     main()
