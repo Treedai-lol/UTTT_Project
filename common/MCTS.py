@@ -90,14 +90,14 @@ def mcts_search(root_board = BoardInit(), time=0.5):
 
         if not node.is_fully_expanded() and node.board.GameFinished()==0:
             node = node.expand()
-        
-        if node.board.GameFinished():
-            if node.board.GameFinished()==1:
-                winner = 1.0
-            if node.board.GameFinished()==2:
-                winner = 0.0
-            if node.board.GameFinished()==3:
-                winner = 0.5   
+
+        n = node.board.GameFinished()
+        if n==1:
+            winner = 1.0
+        if n==2:
+            winner = 0.0
+        if n==3:
+            winner = 0.5   
         else:    
             winner = node.rollout()
         

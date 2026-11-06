@@ -57,9 +57,16 @@ def Compare(func1:callable,func2:callable,games:int,t1,t2)->list:
                 break
     return result
 def MakeData(func1:callable,func2:callable,games,t1,t2):
+    df = pd.read_csv('common/results.csv')
+    w = df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"wins"]
+    d = df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"draws"]
+    l = df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"losses"]
+    if (w+d+l>100).any():
+        print("67")
+        return
+    print("6776")
     res = Compare(func1,func2,games,t1,t2)
     header = ["bot1","bot2","wins","draws","losses","win.perc"]
-    df = pd.read_csv('data.csv')
     df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"wins"]+=res[0]
     df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"draws"]+=res[2]
     df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"losses"]+=res[1]
@@ -104,7 +111,7 @@ def main():
         alltimes = [0.001,0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256,0.512,1.024,2.048,4.096,8.192]
         for i in alltimes:
             for j in alltimes:
-                if(i>=j) and (i<5*j) and i>2:
+                if(i==2*j):
                     MakeData(MCTS,MCTS,1,i,j)
 if __name__ == '__main__':
     t1 = perf_counter()
