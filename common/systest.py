@@ -91,14 +91,15 @@ def mcts_search_with_visits(root_board = BoardInit(), time=1):
 
         if not node.is_fully_expanded() and node.board.GameFinished()==0:
             node = node.expand()
+
         
-        if node.board.GameFinished():
-            if node.board.GameFinished()==1:
-                winner = 1.0
-            if node.board.GameFinished()==2:
-                winner = 0.0
-            if node.board.GameFinished()==3:
-                winner = 0.5   
+        n = node.board.GameFinished()
+        if n==1:
+            winner = 1.0
+        elif n==2:
+            winner = 0.0
+        elif n==3:
+            winner = 0.5   
         else:    
             winner = node.rollout()
         
@@ -117,6 +118,7 @@ def ChooseRolloutMove(moves:int,type=0)->int:
         return moves&-moves
 
 def main():
+    print("67")
     board = BoardInit()
     arr = []
     for i in range(10):

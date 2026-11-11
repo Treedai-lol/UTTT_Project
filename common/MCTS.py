@@ -94,9 +94,9 @@ def mcts_search(root_board = BoardInit(), time=0.5):
         n = node.board.GameFinished()
         if n==1:
             winner = 1.0
-        if n==2:
+        elif n==2:
             winner = 0.0
-        if n==3:
+        elif n==3:
             winner = 0.5   
         else:    
             winner = node.rollout()
