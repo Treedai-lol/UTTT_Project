@@ -75,7 +75,7 @@ class MCTSNode():
         self.wins+=winner
         if self.parent:
             self.parent.backpropagate(winner)
-def mcts_search(root_board = BoardInit(), time=0.5):
+def mcts_search(root_board = BoardInit(), time=0.5,exp=1.4):
     t1 = perf_counter()
     t2 = perf_counter()
     if(root_board.player==1):
@@ -86,7 +86,7 @@ def mcts_search(root_board = BoardInit(), time=0.5):
     while (t2-t1)<time:
         node = root
         while node.is_fully_expanded() and node.board.GameFinished()==0:
-            node = node.best_child()
+            node = node.best_child(exp)
 
         if not node.is_fully_expanded() and node.board.GameFinished()==0:
             node = node.expand()
