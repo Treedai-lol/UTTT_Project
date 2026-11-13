@@ -62,9 +62,7 @@ def MakeData(func1:callable,func2:callable,games,t1,t2):
     d = df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"draws"]
     l = df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"losses"]
     if (w+d+l>100).any():
-        print("67")
         return
-    print("6776")
     res = Compare(func1,func2,games,t1,t2)
     header = ["bot1","bot2","wins","draws","losses","win.perc"]
     df.loc[(df["bot1"]==t1)&(df["bot2"]==t2),"wins"]+=res[0]

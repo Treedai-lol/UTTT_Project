@@ -11,6 +11,7 @@ from time import perf_counter
 from MCTS import mcts_search as MCTS
 from bots import RandomMover as C
 from bots import minimax_move as M
+from MCTSEPT import mcts_search as MCTSEPT
 
 def CMiniMini(func1:callable,func2:callable,games:int,dep1:int,dep2:int)->list:
     result = [0,0,0]#func1 win, func2 win, draw
@@ -105,7 +106,7 @@ def CMonteMini(func1:callable,func2:callable,games:int,time1:int,dep2:int)->list
 def CMonteMonte(func1:callable,func2:callable,games:int,time1:int,time2:int,exp1:int,exp2:int)->list:
     result = [0,0,0]#func1 win, func2 win, draw
     for i in range(games):
-        #print(i+1)
+        print(i+1)
         board = BoardInit()
         while True:
             #board.PrintBoard()
@@ -126,7 +127,7 @@ def CMonteMonte(func1:callable,func2:callable,games:int,time1:int,time2:int,exp1
                 result[2]+=1
                 break
     for i in range(games):
-        #print(games+i+1)
+        print(games+i+1)
         board = BoardInit()
         while True:
             #board.PrintBoard()
@@ -149,8 +150,8 @@ def CMonteMonte(func1:callable,func2:callable,games:int,time1:int,time2:int,exp1
     return result
 def main():
     #print(CMiniMini(M,M,1,4,4))
-    #print(CMonteMonte(MCTS,MCTS,15,1.024,1.024,1,1.4))
-    print(CMonteMini(MCTS,M,5,1.024,5))
+    print(CMonteMonte(MCTSEPT,MCTS,5,0.256,0.256,1.4,1.4))
+    #print(CMonteMini(MCTS,M,5,1.024,5))
         
 if __name__ == '__main__':
     t1 = perf_counter()

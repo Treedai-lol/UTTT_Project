@@ -63,25 +63,6 @@ def Eval(board:Board) ->int:
     #print(o_eval-x_eval)
     return (o_eval-x_eval)
 
-def Eval1(board:Board)->int:
-    r = board.GameFinished()
-    if r==1:
-        return 100
-    if r==2:
-        return -100
-    if r==3:
-        return 0
-    return 0
-
-def Eval2(board:Board)->int:
-    r = board.GameFinished()
-    if r==1:
-        return 100
-    if r==2:
-        return -100
-    if r==3:
-        return 0
-    return 0
 def MagicalFlatten(r:int)->float:
     if r<0:
         raise Exception("something went wrong")
