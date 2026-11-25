@@ -149,12 +149,24 @@ def CMonteMonte(func1:callable,func2:callable,games:int,time1:int,time2:int,exp1
                 break
     return result
 def main():
-    #print(CMiniMini(M,M,1,4,4))
-    for t1 in [0.001,0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256]:
-        for t2 in [0.001,0.002,0.004,0.008,0.016,0.032,0.064,0.128,0.256]:
-            if t2==t1*2:
-                print(CMonteMonte(MCTS,MCTS,25,t1,t2,0.5,0.5))
-    #print(CMonteMini(MCTS,M,5,1.024,5))
+    
+    print(CMonteMini(MCTS,M,50,0.256,1)) """[100, 0, 0]
+[63, 26, 11]
+[48, 40, 12]
+[20, 60, 20]"""
+    print(CMonteMini(MCTS,M,50,0.256,2)) 
+    print(CMonteMini(MCTS,M,50,0.256,3)) 
+    print(CMonteMini(MCTS,M,50,0.256,4)) 
+    #print(CMonteMini(MCTS,M,50,0.256,5)) #[24, 66, 10]
+    #print(CMonteMini(MCTS,M,50,1.024,5)) #[37, 44, 19]
+    #print(CMonteMini(MCTS,M,50,1.024,6)) #[27, 52, 21]
+    for t1 in [1,2,3,4]:
+        for t2 in [1,2,3,4]:
+            if t2>t1:
+                print(t1)
+                print(t2)
+                print(CMiniMini(M,M,50,t1,t1))
+    
     pass
 
 if __name__ == '__main__':
@@ -162,3 +174,12 @@ if __name__ == '__main__':
     main()
     t2 = perf_counter()
     print(t2 - t1)
+"""0.512
+1.024
+[11, 56, 33]
+1.024
+2.048
+[13, 50, 37]
+2.048
+4.096
+[12, 42, 46]"""
