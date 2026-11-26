@@ -150,13 +150,14 @@ def CMonteMonte(func1:callable,func2:callable,games:int,time1:int,time2:int,exp1
     return result
 def main():
     
-    print(CMonteMini(MCTS,M,50,0.256,1)) """[100, 0, 0]
-[63, 26, 11]
-[48, 40, 12]
-[20, 60, 20]"""
-    print(CMonteMini(MCTS,M,50,0.256,2)) 
-    print(CMonteMini(MCTS,M,50,0.256,3)) 
-    print(CMonteMini(MCTS,M,50,0.256,4)) 
+    #print(CMonteMini(MCTS,M,50,0.256,1)) 
+    """[100, 0, 0]
+    [63, 26, 11]
+    [48, 40, 12]
+    [20, 60, 20]"""
+    #print(CMonteMini(MCTS,M,50,0.256,2)) 
+    #print(CMonteMini(MCTS,M,50,0.256,3)) 
+    #print(CMonteMini(MCTS,M,50,0.256,4)) 
     #print(CMonteMini(MCTS,M,50,0.256,5)) #[24, 66, 10]
     #print(CMonteMini(MCTS,M,50,1.024,5)) #[37, 44, 19]
     #print(CMonteMini(MCTS,M,50,1.024,6)) #[27, 52, 21]
@@ -165,7 +166,7 @@ def main():
             if t2>t1:
                 print(t1)
                 print(t2)
-                print(CMiniMini(M,M,50,t1,t1))
+                print(CMiniMini(M,M,50,t1,t2))
     
     pass
 
